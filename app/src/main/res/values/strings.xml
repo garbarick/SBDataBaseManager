@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SBDataBaseManager</string>
+    <string name="tables">Tables</string>
+    <string name="queries">Queries</string>
+    
+    <string name="newQuery">New Query</string>
+    <string name="editQuery">Edit Query</string>
+    <string name="deleteQuery">Delete Query</string>
+    
+    <string name="num">num</string>
+    <string name="name">Name</string>
+    <string name="query">Query</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="execute">Execute</string>
+    
+</resources>

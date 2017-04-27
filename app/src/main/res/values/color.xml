@@ -5,13 +5,11 @@
     <color name="darkGray">#303030</color>
     
     <color name="header">#303030</color>
-    <color name="headerCell1">#505050</color>
-    <color name="headerCell2">#505050</color>
-    <color name="headerCell3">#505050</color>
+    <color name="headerFirstCell">#505050</color>
+    <color name="headerOtherCell">#505050</color>
     
     <color name="row">#505050</color>
-    <color name="rowCell1">#505050</color>
-    <color name="rowCell2">#303030</color>
-    <color name="rowCell3">#303030</color>
+    <color name="rowFirstCell">#505050</color>
+    <color name="rowOtherCell">#303030</color>
     
 </resources>

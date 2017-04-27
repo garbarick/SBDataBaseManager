@@ -7,25 +7,30 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 
+import ru.net.serbis.dbmanager.Log;
+
 public class Row extends LinearLayout
 {
+    public static final int MARGIN = 2;
+    public static final int PADDING = 5;
+
+    private static final int SHIFT = 100;
+    
     private List<String> cells;
-    private int column = 1;
-    
+    private Width width;
+
     private int color = R.color.row;
-    private int colorCell1 = R.color.rowCell1;
-    private int colorCell2 = R.color.rowCell2;
-    private int colorCell3 = R.color.rowCell3;
-    
-    private float weightCell2;
-    private float weightCell3;
-    
+    private int colorFirstCell = R.color.rowFirstCell;
+    private int colorOtherCell = R.color.rowOtherCell;
+
+    private boolean columnsInit = false;
+
     public Row(Context context)
     {
         super(context);
         init(context);
     }
-    
+
     public Row(Context context, AttributeSet attrs)
     {
         super(context, attrs);
@@ -42,92 +47,82 @@ public class Row extends LinearLayout
     {
         this.cells = cells;
     }
-    
-    public void setColumn(int column)
+
+    public void setWidth(Width width)
     {
-        this.column = column;
+        this.width = width;
     }
-    
+
     private void init(Context context)
     {
-        inflate(context, R.layout.content_row, this);
-        weightCell2 = getWeight(R.id.cell2);
-        weightCell3 = getWeight(R.id.cell3);
-        setColors();
+        setOrientation(LinearLayout.HORIZONTAL);
     }
-    
-    private void setColors()
-    {
-        setBackgroundResource(color);
-        setColor(R.id.cell1, colorCell1);
-        setColor(R.id.cell2, colorCell2);
-        setColor(R.id.cell3, colorCell3);
-    }
-    
-    public void setColors(int color, int colorCell1, int colorCell2, int colorCell3)
+
+    public void setColors(int color, int colorFirstCell, int colorOtherCell)
     {
         this.color = color;
-        this.colorCell1 = colorCell1;
-        this.colorCell2 = colorCell2;
-        this.colorCell3 = colorCell3;
-        setColors();
+        this.colorFirstCell = colorFirstCell;
+        this.colorOtherCell = colorOtherCell;
     }
-    
+
     protected <T extends View> T findView(int id)
     {
         return (T) findViewById(id);
     }
-    
+
     public void update()
     {
-        setText(0, R.id.cell1);
-        boolean first = setText(column, R.id.cell2);
-        boolean second = setText(column + 1, R.id.cell3);
-        if (first && second)
+        if (!columnsInit)
         {
-            setWeight(R.id.cell2, weightCell2);
-            setWeight(R.id.cell3, weightCell3);
+            createContent();
+            columnsInit = true;
         }
-        else if (first && !second)
+        int i = 0;
+        int[] widths = width.getNewWidths();
+        for (String cell : cells)
         {
-            setWeight(R.id.cell2, 0);
-            setWeight(R.id.cell3, 100);
+            TextView text = findView(i + SHIFT);
+            text.setText(cell);
+            widths[i] = getTextWidth(cell) + MARGIN + PADDING + PADDING;
+            setWidth(text, width.getWidth(i), MARGIN, PADDING);
+            i ++;
+        }
+        width.setWidths(widths);
+    }
+
+    private void createContent()
+    {
+        setBackgroundResource(color);
+        for (int i = 0; i < cells.size(); i ++)
+        {
+            TextView text = new TextView(getContext());
+            text.setBackgroundResource(i == 0 ? colorFirstCell : colorOtherCell);
+            text.setId(i + SHIFT);
+            addView(text);
         }
     }
 
-    private boolean setText(int position, int id)
+    public void setWidth(View view, int width)
     {
-        TextView text = findView(id);
-        if (cells.size() > position)
-        {
-            text.setText(cells.get(position));
-            return true;
-        }
-        else
-        {
-            text.setText(null);
-            return false;
-        }
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+        params.width = width;
+        view.setLayoutParams(params);
     }
-    
-    private float getWeight(int id)
+
+    public void setWidth(View view, int width, int margin, int padding)
     {
-        TextView text = findView(id);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
-        return params.weight;
+        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
+        params.width = width;
+        params.setMargins(0, 0, margin, 0);
+        view.setPadding(padding, 0, padding, 0);
+        view.setLayoutParams(params);
     }
-    
-    private void setWeight(int id, float weight)
+
+    private int getTextWidth(String text)
     {
-        TextView text = findView(id);
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) text.getLayoutParams();
-        params.weight = weight;
-        text.setLayoutParams(params);
-    }
-    
-    private void setColor(int id, int color)
-    {
-        TextView text = findView(id);
-        text.setBackgroundResource(color);
+        TextView view = new TextView(getContext());
+        view.setText(text);
+        view.measure(0, 0);
+        return view.getMeasuredWidth();
     }
 }

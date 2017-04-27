@@ -8,16 +8,12 @@ import ru.net.serbis.dbmanager.*;
 
 public class TableAdapter extends ArrayAdapter<List<String>>
 {
-    private int column = 1;
+    private Width width;
     
-    public TableAdapter(Activity context, List<List<String>> objects)
+    public TableAdapter(Activity context, List<List<String>> objects, Width width)
     {
         super(context, R.layout.content, objects);
-    }
-
-    public void setColumn(int column)
-    {
-        this.column = column;
+        this.width = width;
     }
 
     @Override
@@ -27,13 +23,13 @@ public class TableAdapter extends ArrayAdapter<List<String>>
         if (view == null)
         {
              row = new Row(getContext());
+             row.setWidth(width);
         }
         else
         {
             row = (Row) view;
         }
         row.setCells(getItem(position));
-        row.setColumn(column);
         row.update();
         return row;
     }

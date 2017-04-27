@@ -11,23 +11,30 @@
 		android:layout_centerInParent="true"
 		android:id="@+id/progress"/>
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/main">
+	<HorizontalScrollView
+		android:layout_height="match_parent"
+		android:layout_width="match_parent"
+		android:id="@+id/main"
+        android:fillViewport="true">
 
-        <ru.net.serbis.dbmanager.table.Row
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:id="@+id/header"/>
+		<LinearLayout
+			android:layout_width="wrap_content"
+			android:layout_height="match_parent"
+			android:orientation="vertical">
 
-        <ListView
-            android:layout_height="match_parent"
-            android:layout_width="match_parent"
-            android:id="@+id/table"
-            android:layout_below="@+id/header"/>
+			<ru.net.serbis.dbmanager.table.Row
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:id="@+id/header"/>
 
-    </RelativeLayout>
+			<ListView
+				android:layout_height="match_parent"
+				android:layout_width="wrap_content"
+				android:id="@+id/table"/>
+
+		</LinearLayout>
+
+	</HorizontalScrollView>
 
 </RelativeLayout>
 

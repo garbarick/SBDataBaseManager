@@ -9,10 +9,9 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.query.*;
-import ru.net.serbis.dbmanager.swipe.*;
 import ru.net.serbis.dbmanager.task.*;
 
-public class Table extends AsyncActivity
+public class Table extends AsyncActivity implements Width.Listener
 {
     public static final String TABLE = "table";
     public static final String QUERY = "query";
@@ -21,11 +20,10 @@ public class Table extends AsyncActivity
     private String db;
     private Query query;
     private List<List<String>> rows;
-    private int column = 1;
-    private int maxColumn;
+    private Width width;
 
     private Row header;
-    private TableAdapter adapter;
+    private ListView list;
     private String error;
 
     @Override
@@ -86,16 +84,17 @@ public class Table extends AsyncActivity
     private void initMainContent()
     {
         List<String> headerCells = rows.remove(0);
-        maxColumn = headerCells.size() - 1;
+        width = new Width(headerCells.size());
+        width.addListener(this);
 
-        adapter = new TableAdapter(this, rows);
-        ListView list = findView(R.id.table);
+        TableAdapter adapter = new TableAdapter(this, rows, width);
+        list = findView(R.id.table);
         list.setAdapter(adapter);
-        initSwipeListener(list);
 
         header = findView(R.id.header);
-        header.setColors(R.color.header, R.color.headerCell1, R.color.headerCell2, R.color.headerCell3);
+        header.setColors(R.color.header, R.color.headerFirstCell, R.color.headerOtherCell);
         header.setCells(headerCells);
+        header.setWidth(width);
         header.update();
     }
 
@@ -113,40 +112,13 @@ public class Table extends AsyncActivity
         }
     }
 
-    private void initSwipeListener(ListView list)
+    @Override
+    public void update()
     {
-        list.setOnTouchListener(
-            new SwipeListener(this, false)
-            {
-                @Override
-                public void onSwipeLeft()
-                {
-                    if (column < maxColumn)
-                    {
-                        column ++;
-                        updateCells();
-                    }
-                }
-
-                @Override
-                public void onSwipeRight()
-                {
-                    if (column > 1)
-                    {
-                        column --;
-                        updateCells();
-                    }
-                }
-            }
-        );
-    }
-
-    private void updateCells()
-    {
-        header.setColumn(column);
         header.update();
-
-        adapter.setColumn(column);
-        adapter.notifyDataSetChanged();
+        ((TableAdapter)list.getAdapter()).notifyDataSetChanged();
+        
+        header.setWidth(header, width.getSum());
+        header.setWidth(list, width.getSum());
     }
 }

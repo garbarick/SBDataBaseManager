@@ -11,7 +11,7 @@ public abstract class IconAdapter<T> extends Adapter<T>
     public IconAdapter(Activity context, List<String> objects, int iconId)
     {
         super(context, objects);
-        icon = context.getDrawable(iconId);
+        icon = context.getResources().getDrawable(iconId);
     }
     
     @Override

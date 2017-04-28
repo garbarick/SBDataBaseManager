@@ -7,8 +7,6 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 
-import ru.net.serbis.dbmanager.Log;
-
 public class Row extends LinearLayout
 {
     public static final int MARGIN = 2;

@@ -115,10 +115,17 @@ public class Table extends AsyncActivity implements Width.Listener
     @Override
     public void update()
     {
-        header.update();
-        ((TableAdapter)list.getAdapter()).notifyDataSetChanged();
-        
-        header.setWidth(header, width.getSum());
-        header.setWidth(list, width.getSum());
+        try
+        {
+            list.invalidateViews();
+            header.update();
+
+            header.setWidth(header, width.getSum());
+            header.setWidth(list, width.getSum());
+        }
+        catch (Exception e)
+        {
+            Log.info(this, e);
+        }
     }
 }

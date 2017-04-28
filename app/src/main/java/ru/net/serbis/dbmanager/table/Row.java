@@ -75,17 +75,32 @@ public class Row extends LinearLayout
             createContent();
             columnsInit = true;
         }
+        updateWidth(cells);
+        setWidths();
+    }
+    
+    public void updateWidth(List<String> cells)
+    {
         int i = 0;
         int[] widths = width.getNewWidths();
         for (String cell : cells)
         {
-            TextView text = findView(i + SHIFT);
-            text.setText(cell);
             widths[i] = getTextWidth(cell) + MARGIN + PADDING + PADDING;
-            setWidth(text, width.getWidth(i), MARGIN, PADDING);
             i ++;
         }
         width.setWidths(widths);
+    }
+    
+    private void setWidths()
+    {
+        int i = 0;
+        for (String cell : cells)
+        {
+            TextView text = findView(i + SHIFT);
+            text.setText(cell);
+            setWidth(text, width.getWidth(i), MARGIN, PADDING);
+            i ++;
+        }
     }
 
     private void createContent()

@@ -85,7 +85,6 @@ public class Table extends AsyncActivity implements Width.Listener
     {
         List<String> headerCells = rows.remove(0);
         width = new Width(headerCells.size());
-        width.addListener(this);
 
         TableAdapter adapter = new TableAdapter(this, rows, width);
         list = findView(R.id.table);
@@ -96,6 +95,14 @@ public class Table extends AsyncActivity implements Width.Listener
         header.setCells(headerCells);
         header.setWidth(width);
         header.update();
+        
+        for (int i = 0; i <= 100 && i < rows.size(); i++)
+        {
+            header.updateWidth(rows.get(i));
+        }
+        
+        update();
+        width.addListener(this);
     }
 
     @Override
@@ -115,17 +122,10 @@ public class Table extends AsyncActivity implements Width.Listener
     @Override
     public void update()
     {
-        try
-        {
-            list.invalidateViews();
-            header.update();
+        list.invalidateViews();
+        header.update();
 
-            header.setWidth(header, width.getSum());
-            header.setWidth(list, width.getSum());
-        }
-        catch (Exception e)
-        {
-            Log.info(this, e);
-        }
+        header.setWidth(header, width.getSum());
+        header.setWidth(list, width.getSum());
     }
 }

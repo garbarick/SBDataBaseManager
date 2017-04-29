@@ -42,7 +42,6 @@
         
         <activity
             android:name=".query.Edit"
-            android:launchMode="singleTask"
             android:stateNotNeeded="true"/>
         
         <activity

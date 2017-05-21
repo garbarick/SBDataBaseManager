@@ -66,6 +66,7 @@ public class Table extends AsyncActivity implements Width.Listener
         main.setVisibility(View.GONE);
 
         new AlertDialog.Builder(this)
+            .setTitle(getResources().getString(R.string.error))
             .setMessage(error)
             .setIcon(android.R.drawable.ic_dialog_alert)
             .setCancelable(false)
@@ -110,7 +111,7 @@ public class Table extends AsyncActivity implements Width.Listener
     {
         try
         {
-            rows = new DB(this, app, db).select(query.getQuery(), true);
+            rows = new DB(this, app, db).select(query.getQuery(), true, true);
         }
         catch (Exception e)
         {

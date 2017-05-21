@@ -113,35 +113,38 @@ public class DB
         }
     }
 
-    public List<List<String>> select(final String query, final boolean withColumnName)
+    public List<List<String>> select(final String query, final boolean withColumnName, final boolean withRowNum)
     {
         return run(
             new Call<List<List<String>>>()
             {
                 public List<List<String>> call(SQLiteDatabase db)
                 {
-                    return selectInDB(db, query, withColumnName);
+                    return selectInDB(db, query, withColumnName, withRowNum);
                 }
             }
         );
     }
 
-    private List<List<String>> selectInDB(SQLiteDatabase db, String query, boolean withColumnName)
+    private List<List<String>> selectInDB(SQLiteDatabase db, String query, boolean withColumnName, boolean withRowNum)
     {
         List<List<String>> result = new ArrayList<List<String>>();
         Cursor cursor = db.rawQuery(query, null);
         if (withColumnName)
         {
-            result.add(getHeader(cursor));
+            result.add(getHeader(cursor, withRowNum));
         }
-        result.addAll(getRows(cursor));
+        result.addAll(getRows(cursor, withRowNum));
         return result;
     }
 
-    private List<String> getHeader(Cursor cursor)
+    private List<String> getHeader(Cursor cursor, boolean withRowNum)
     {
         List<String> result = new ArrayList<String>();
-        result.add(context.getResources().getString(R.string.num));
+        if (withRowNum)
+        {
+            result.add(context.getResources().getString(R.string.num));
+        }
         int count = cursor.getColumnCount();
         for (int i = 0; i < count; i++)
         {
@@ -150,7 +153,7 @@ public class DB
         return result;
     }
     
-    private List<List<String>> getRows(Cursor cursor)
+    private List<List<String>> getRows(Cursor cursor, boolean withRowNum)
     {
         List<List<String>> result = new ArrayList<List<String>>();
         if (cursor.moveToFirst())
@@ -160,7 +163,10 @@ public class DB
             do
             {
                 List<String> row = new ArrayList<String>();
-                row.add(String.valueOf(y++));
+                if (withRowNum)
+                {
+                    row.add(String.valueOf(y++));
+                }
                 for (int i = 0; i < count; i++)
                 {
                     row.add(getString(cursor, i));

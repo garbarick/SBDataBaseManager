@@ -1,21 +1,21 @@
-package ru.net.serbis.dbmanager.query;
+package ru.net.serbis.dbmanager.query.db;
 
 import android.content.*;
 import android.database.*;
 import android.database.sqlite.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
+import ru.net.serbis.dbmanager.app.*;
+import ru.net.serbis.dbmanager.query.*;
+import ru.net.serbis.dbmanager.query.db.table.*;
+
+import ru.net.serbis.dbmanager.query.db.table.Queries;
 
 public class Helper extends SQLiteOpenHelper
 {
-    private interface Call<T>
-    {
-        T call(SQLiteDatabase db);
-    }
-
     public Helper(Context context)
     {
-        super(context, "db", null, 1);
+        super(context, "db", null, 2);
     }
 
     @Override
@@ -44,26 +44,8 @@ public class Helper extends SQLiteOpenHelper
 
     private void createTables(SQLiteDatabase db)
     {
-        try
-        {
-            createaQueriesTable(db);
-        }
-        catch (Exception e)
-        {
-            Log.info(this, e);
-        }
-    }
-
-    private void createaQueriesTable(SQLiteDatabase db)
-    {
-        db.execSQL(
-            "create table queries(" +
-            "    id integer primary key autoincrement," +
-            "    package text," +
-            "    db text," +
-            "    name text," +
-            "    query text" +
-            ")");
+        new Queries().call(db);
+        new Widgets().call(db);
     }
 
     private <T> T runInDB(Call<T> call, boolean write)
@@ -187,7 +169,7 @@ public class Helper extends SQLiteOpenHelper
             return false;
         }
     }
-    
+
     public boolean deleteQuery(final Query query)
     {
         return runInDB(
@@ -207,6 +189,130 @@ public class Helper extends SQLiteOpenHelper
         try
         {
             int count = db.delete("queries", "id = ?", new String[]{String.valueOf(query.getId())});
+            return count == 1;
+        }
+        catch (Exception e)
+        {
+            Log.info(this, e);
+            return false;
+        }
+    }
+
+    public List<AppDbQuery> getQueries()
+    {
+        return runInDB(
+            new Call<List<AppDbQuery>>()
+            {
+                public List<AppDbQuery> call(SQLiteDatabase db)
+                {
+                    return getQueries(db);
+                }
+            },
+            false
+        );
+    }
+
+    private List<AppDbQuery> getQueries(SQLiteDatabase db)
+    {
+        List<AppDbQuery> result = new ArrayList<AppDbQuery>();
+        Cursor cursor  = db.query("queries", new String[]{"id", "package", "db", "name", "query"}, null, null, null, null, "name");
+        if (cursor.moveToFirst())
+        {
+            do
+            {
+                result.add(getQuery(cursor));
+            }
+            while(cursor.moveToNext());
+        }
+        return result;
+    }
+
+    public AppDbQuery getQuery(final int widgetId)
+    {
+        return runInDB(
+            new Call<AppDbQuery>()
+            {
+                public AppDbQuery call(SQLiteDatabase db)
+                {
+                    return getQuery(db, widgetId);
+                }
+            },
+            false
+        );
+    }
+
+    private AppDbQuery getQuery(SQLiteDatabase db, Integer widgetId)
+    {
+        Cursor cursor  = db.query("queries", new String[]{"id", "package", "db", "name", "query"}, "id = (select query_id from widgets where id = ?)", new String[]{widgetId.toString()}, null, null, null);
+        if (cursor.moveToFirst())
+        {
+            return getQuery(cursor);
+        }
+        return null;
+    }
+
+    private AppDbQuery getQuery(Cursor cursor)
+    {
+        return new AppDbQuery(
+            new App(cursor.getString(1)),
+            cursor.getString(2),
+            new Query(
+                cursor.getLong(0),
+                cursor.getString(3),
+                cursor.getString(4)));
+    }
+
+    public boolean addWidget(final int widgetId, final long queryId)
+    {
+        return runInDB(
+            new Call<Boolean>()
+            {
+                public Boolean call(SQLiteDatabase db)
+                {
+                    return addWidget(db, widgetId, queryId);
+                }
+            },
+            true
+        );
+    }
+
+    private boolean addWidget(SQLiteDatabase db, int widgetId, long queryId)
+    {
+        try
+        {
+            ContentValues values = new ContentValues();
+            values.put("id", widgetId);
+            values.put("query_id", queryId);
+
+            db.insert("widgets", null, values);
+            return true;
+        }
+        catch (Exception e)
+        {
+            Log.info(this, e);
+            return false;
+        }
+    }
+
+    public boolean deleteWidget(final int widgetId)
+    {
+        return runInDB(
+            new Call<Boolean>()
+            {
+                public Boolean call(SQLiteDatabase db)
+                {
+                    return deleteWidget(db, widgetId);
+                }
+            },
+            true
+        );
+    }
+
+    private boolean deleteWidget(SQLiteDatabase db, Integer widgetId)
+    {
+        try
+        {
+            int count = db.delete("widgets", "id = ?", new String[]{widgetId.toString()});
             return count == 1;
         }
         catch (Exception e)

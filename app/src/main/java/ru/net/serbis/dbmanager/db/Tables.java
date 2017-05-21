@@ -44,9 +44,10 @@ public class Tables extends Folder
                 "  from sqlite_master" +
                 " where type = 'table'" +
                 " order by name",
+                false,
                 false))
             {
-                tables.add(row.get(1));
+                tables.add(row.get(0));
             }
         }
         catch (Exception e)

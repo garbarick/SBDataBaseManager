@@ -3,6 +3,8 @@
 
     <color name="gray">#505050</color>
     <color name="darkGray">#303030</color>
+    <color name="grayTransparent">#99505050</color>
+    <color name="darkGrayTransparent">#99303030</color>
     
     <color name="header">#303030</color>
     <color name="headerFirstCell">#505050</color>

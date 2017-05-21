@@ -7,6 +7,7 @@ import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.folder.*;
+import ru.net.serbis.dbmanager.query.db.*;
 import ru.net.serbis.dbmanager.table.*;
 
 public class Queries extends Folder

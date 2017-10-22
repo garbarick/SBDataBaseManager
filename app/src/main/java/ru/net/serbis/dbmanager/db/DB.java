@@ -66,9 +66,9 @@ public class DB
     {
         File file = app.getDBFile(db);
         File journal = app.getJournalFile(db);
-        File contextFile = thisApp.getDBFile(db);
-        File contextJournal = thisApp.getJournalFile(db);
-        thisApp.getDataBaseDir().mkdir();
+        File contextFile = thisApp.getDBFile(app.getPackage(), db);
+        File contextJournal = thisApp.getJournalFile(app.getPackage(), db);
+        thisApp.getDataBaseDir(app.getPackage()).mkdirs();
         try
         {
             sh.command(
@@ -83,7 +83,7 @@ public class DB
         {
             contextFile.delete();
             contextJournal.delete();
-            thisApp.getDataBaseDir().delete();
+            thisApp.getDataBaseDir(app.getPackage()).delete();
         }
     }
     

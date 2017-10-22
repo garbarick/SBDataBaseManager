@@ -48,15 +48,30 @@ public class App implements Comparable, Serializable
     {
         return new File("/data/data/" + packageName + "/databases");
     }
-    
+	
+    public File getDataBaseDir(String sub)
+    {
+        return new File("/data/data/" + packageName + "/databases/" + sub);
+    }
+	
     public File getDBFile(String db)
     {
         return new File(getDataBaseDir(), db);
     }
     
+	public File getDBFile(String sub, String db)
+    {
+        return new File(getDataBaseDir(sub), db);
+    }
+	
     public File getJournalFile(String db)
     {
-        return new File(getDataBaseDir(), db + "-journal");
+        return getDBFile(db + "-journal");
+    }
+    
+	public File getJournalFile(String sub, String db)
+    {
+        return getDBFile(sub, db + "-journal");
     }
     
     @Override

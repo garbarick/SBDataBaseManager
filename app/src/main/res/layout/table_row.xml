@@ -7,18 +7,18 @@
 
 	<TextView
 		android:layout_height="match_parent"
-		android:layout_width="match_parent"
+		android:layout_width="wrap_content"
 		android:id="@+id/key"
-		android:layout_weight="1"
-		android:background="@color/grayTransparent"/>
+		android:background="@color/grayTransparent"
+		android:text="key"/>
 
 	<TextView
 		android:layout_height="match_parent"
 		android:layout_width="match_parent"
 		android:id="@+id/value"
-		android:layout_weight="1"
 		android:background="@color/darkGrayTransparent"
-		android:gravity="right"/>
+		android:gravity="right"
+		android:text="value"/>
 
 </LinearLayout>
 

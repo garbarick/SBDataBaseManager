@@ -1,4 +1,5 @@
 package ru.net.serbis.dbmanager.db;
+
 import android.content.*;
 import android.view.*;
 import android.widget.*;
@@ -7,7 +8,6 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.adapter.*;
 import ru.net.serbis.dbmanager.app.*;
 import ru.net.serbis.dbmanager.folder.*;
-import ru.net.serbis.dbmanager.sh.*;
 import ru.net.serbis.dbmanager.task.*;
 
 public class DataBases extends AsyncActivity
@@ -50,15 +50,7 @@ public class DataBases extends AsyncActivity
     @Override
     public void inBackground()
     {
-        for (String name : new Shell().command(
-            "cd " + app.getDataBaseDir().getAbsolutePath(),
-            "ls"))
-        {
-            if (!name.endsWith("-journal"))
-            {
-                dbs.add(name);
-            }
-        }
+        dbs.addAll(app.getDBFiles());
         Collections.sort(dbs);
     }
 }

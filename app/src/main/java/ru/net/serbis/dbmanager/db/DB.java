@@ -34,12 +34,25 @@ public class DB
     {
         try
         {
-            return runByChmod(call);
+            return runInDb(call);
         }
-        catch (SQLiteDatabaseLockedException e)
+        catch (SQLiteCantOpenDatabaseException openError)
         {
-            return runByCopy(call);
+            try
+            {
+                return runByChmod(call);
+            }
+            catch (SQLiteDatabaseLockedException lockError)
+            {
+                return runByCopy(call);
+            }
         }
+    }
+    
+    private <T> T runInDb(Call<T> call)
+    {
+        File file = app.getDBFile(db);
+        return runInDB(file, call);
     }
 
     private <T> T runByChmod(Call<T> call)

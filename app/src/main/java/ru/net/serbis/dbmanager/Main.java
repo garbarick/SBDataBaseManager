@@ -53,5 +53,10 @@ public class Main extends AsyncActivity
             }
         }
         Collections.sort(appList);
+        Storage storage = new Storage(this);
+        if (storage.hasDataBase())
+        {
+            appList.add(0, storage);
+        }
     }
 }

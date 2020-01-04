@@ -1,6 +1,9 @@
 package ru.net.serbis.dbmanager.app;
+
 import android.graphics.drawable.*;
 import java.io.*;
+import java.util.*;
+import ru.net.serbis.dbmanager.sh.*;
 
 public class App implements Comparable, Serializable
 {
@@ -51,7 +54,7 @@ public class App implements Comparable, Serializable
 	
     public File getDataBaseDir(String sub)
     {
-        return new File("/data/data/" + packageName + "/databases/" + sub);
+        return new File(getDataBaseDir(), sub);
     }
 	
     public File getDBFile(String db)
@@ -78,5 +81,25 @@ public class App implements Comparable, Serializable
     public int compareTo(Object that)
     {
         return label.compareTo(((App) that).label);
+    }
+    
+    public List<String> getDBFiles()
+    {
+        List<String> result = new ArrayList<String>();
+        for (String name : new Shell().command(
+            "cd " + getDataBaseDir().getAbsolutePath(),
+            "ls"))
+        {
+            if (checkDBName(name))
+            {
+                result.add(name);
+            }
+        }
+        return result;
+    }
+    
+    protected boolean checkDBName(String name)
+    {
+        return !name.endsWith("-journal");
     }
 }

@@ -1,4 +1,5 @@
 package ru.net.serbis.dbmanager.widget;
+
 import android.app.*;
 import android.appwidget.*;
 import android.content.*;

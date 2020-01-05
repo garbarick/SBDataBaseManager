@@ -1,4 +1,5 @@
 package ru.net.serbis.dbmanager;
+
 import android.content.*;
 import android.content.pm.*;
 import android.view.*;

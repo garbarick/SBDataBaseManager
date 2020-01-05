@@ -1,6 +1,5 @@
 package ru.net.serbis.dbmanager.table;
 
-import android.app.*;
 import android.content.*;
 import android.view.*;
 import android.widget.*;
@@ -8,8 +7,10 @@ import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.*;
 import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.task.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public class Table extends AsyncActivity implements Width.Listener
 {
@@ -53,11 +54,9 @@ public class Table extends AsyncActivity implements Width.Listener
         if (rows == null)
         {
             showError();
+            return;
         }
-        else
-        {
-            initMainContent();
-        }
+        initMainContent();
     }
 
     private void showError()
@@ -65,21 +64,13 @@ public class Table extends AsyncActivity implements Width.Listener
         View main = getMain();
         main.setVisibility(View.GONE);
 
-        new AlertDialog.Builder(this)
-            .setTitle(getResources().getString(R.string.error))
-            .setMessage(error)
-            .setIcon(android.R.drawable.ic_dialog_alert)
-            .setCancelable(false)
-            .setPositiveButton(
-            android.R.string.ok,
-            new DialogInterface.OnClickListener()
+        new MessageDialog(this, error)
+        {
+            public void onClick(DialogInterface dialog, int which)
             {
-                public void onClick(DialogInterface dialog, int which)
-                {
-                    Table.this.finish();
-                }
-            })
-            .show();
+                Table.this.finish();
+            }
+        };
     }
 
     private void initMainContent()
@@ -88,10 +79,10 @@ public class Table extends AsyncActivity implements Width.Listener
         width = new Width(headerCells.size());
 
         TableAdapter adapter = new TableAdapter(this, rows, width);
-        list = findView(R.id.table);
+        list = Utils.findView(this, R.id.table);
         list.setAdapter(adapter);
 
-        header = findView(R.id.header);
+        header = Utils.findView(this, R.id.header);
         header.setColors(R.color.header, R.color.headerFirstCell, R.color.headerOtherCell);
         header.setCells(headerCells);
         header.setWidth(width);
@@ -111,7 +102,7 @@ public class Table extends AsyncActivity implements Width.Listener
     {
         try
         {
-            rows = new DB(this, app, db).select(query.getQuery(), true, true);
+            rows = new DB(this, app, db).select(query.getQuery(), true, true, query.getBindArray());
         }
         catch (Exception e)
         {

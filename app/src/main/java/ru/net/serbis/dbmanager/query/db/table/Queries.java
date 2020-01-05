@@ -1,4 +1,5 @@
 package ru.net.serbis.dbmanager.query.db.table;
+
 import android.database.sqlite.*;
 
 public class Queries extends Table

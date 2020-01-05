@@ -17,5 +17,6 @@
     <string name="execute">Execute</string>
     <string name="ok">Ok</string>
     <string name="error">Error</string>
+    <string name="binds">Binds</string>
     
 </resources>

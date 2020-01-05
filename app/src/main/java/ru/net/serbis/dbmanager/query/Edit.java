@@ -1,4 +1,5 @@
 package ru.net.serbis.dbmanager.query;
+
 import android.app.*;
 import android.content.*;
 import android.os.*;
@@ -6,6 +7,7 @@ import android.view.*;
 import android.widget.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.table.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public class Edit extends Activity
 {
@@ -20,8 +22,8 @@ public class Edit extends Activity
         setContentView(R.layout.query);
         setResult(RESULT_CANCELED);
         
-        editName = findView(R.id.name);
-        editQuery = findView(R.id.query);
+        editName = Utils.findView(this, R.id.name);
+        editQuery = Utils.findView(this, R.id.query);
         
         Intent intent = getIntent();
         if (intent.hasExtra(Table.QUERY))
@@ -36,11 +38,6 @@ public class Edit extends Activity
         initExecute();
     }
     
-    protected <T extends View> T findView(int id)
-    {
-        return (T) findViewById(id);
-    }
-    
     private Query getQuery(Query query)
     {
         return new Query(
@@ -51,7 +48,7 @@ public class Edit extends Activity
     
     private void initSave()
     {
-        Button button = findView(R.id.save);
+        Button button = Utils.findView(this, R.id.save);
         button.setOnClickListener(
             new View.OnClickListener()
             {
@@ -68,7 +65,7 @@ public class Edit extends Activity
     
     private void initCancel()
     {
-        Button button = findView(R.id.cancel);
+        Button button = Utils.findView(this, R.id.cancel);
         button.setOnClickListener(
             new View.OnClickListener()
             {
@@ -82,16 +79,13 @@ public class Edit extends Activity
     
     private void initExecute()
     {
-        Button button = findView(R.id.execute);
+        Button button = Utils.findView(this, R.id.execute);
         button.setOnClickListener(
             new View.OnClickListener()
             {
                 public void onClick(View view)
                 {
-                    Intent intent = new Intent(getIntent());
-                    intent.setClass(Edit.this, Table.class);
-                    intent.putExtra(Table.QUERY, getQuery(query));
-                    startActivity(intent);
+                    new QueryExecutor(Edit.this, getQuery(query));
                 }
             }
         );

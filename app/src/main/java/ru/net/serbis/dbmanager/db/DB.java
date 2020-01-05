@@ -108,6 +108,7 @@ public class DB
             db = SQLiteDatabase.openDatabase(
                 file.getAbsolutePath(),
                 null,
+                SQLiteDatabase.NO_LOCALIZED_COLLATORS |
                 SQLiteDatabase.OPEN_READWRITE);
                 
             return call.call(db);
@@ -126,23 +127,23 @@ public class DB
         }
     }
 
-    public List<List<String>> select(final String query, final boolean withColumnName, final boolean withRowNum)
+    public List<List<String>> select(final String query, final boolean withColumnName, final boolean withRowNum, final String... args)
     {
         return run(
             new Call<List<List<String>>>()
             {
                 public List<List<String>> call(SQLiteDatabase db)
                 {
-                    return selectInDB(db, query, withColumnName, withRowNum);
+                    return selectInDB(db, query, withColumnName, withRowNum, args);
                 }
             }
         );
     }
 
-    private List<List<String>> selectInDB(SQLiteDatabase db, String query, boolean withColumnName, boolean withRowNum)
+    private List<List<String>> selectInDB(SQLiteDatabase db, String query, boolean withColumnName, boolean withRowNum, String... args)
     {
         List<List<String>> result = new ArrayList<List<String>>();
-        Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query, args);
         if (withColumnName)
         {
             result.add(getHeader(cursor, withRowNum));

@@ -1,17 +1,18 @@
 package ru.net.serbis.dbmanager.widget;
-import android.app.*;
+
+import android.content.*;
+import android.view.*;
+import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.adapter.*;
 import ru.net.serbis.dbmanager.query.*;
-import android.widget.*;
-import android.view.*;
 
 public class ConfigAdapter extends IconAdapter<AppDbQuery>
 {
     private int checked = -1;
     
-    public ConfigAdapter(Activity context, List<AppDbQuery> objects, int iconId)
+    public ConfigAdapter(Context context, List<AppDbQuery> objects, int iconId)
     {
         super(context, R.layout.config, R.layout.check_row, objects, iconId);
     }

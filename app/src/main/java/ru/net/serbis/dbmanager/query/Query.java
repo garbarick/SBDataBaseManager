@@ -1,12 +1,14 @@
 package ru.net.serbis.dbmanager.query;
 
 import java.io.*;
+import java.util.*;
 
 public class Query implements Serializable
 {
     private long id;
     private String name;
     private String query;
+    private List<String> binds;
 
     public Query(long id, String name, String query)
     {
@@ -52,5 +54,24 @@ public class Query implements Serializable
     public String getQuery()
     {
         return query;
+    }
+    
+    public void setBinds(List<String> binds)
+    {
+        this.binds = binds;
+    }
+
+    public List<String> getBinds()
+    {
+        return binds;
+    }
+    
+    public String[] getBindArray()
+    {
+        if (binds == null)
+        {
+            return new String[0];
+        }
+        return binds.toArray(new String[binds.size()]);
     }
 }

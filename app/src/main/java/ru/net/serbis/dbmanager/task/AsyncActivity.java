@@ -4,6 +4,7 @@ import android.app.*;
 import android.os.*;
 import android.view.*;
 import ru.net.serbis.dbmanager.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public abstract class AsyncActivity extends Activity implements Async
 {
@@ -22,14 +23,9 @@ public abstract class AsyncActivity extends Activity implements Async
     
     protected abstract void initCreate();
     
-    protected <T extends View> T findView(int id)
-    {
-        return (T) findViewById(id);
-    }
-    
     protected <T extends View> T getMain()
     {
-        return findView(R.id.main);
+        return Utils.findView(this, R.id.main);
     }
     
     @Override

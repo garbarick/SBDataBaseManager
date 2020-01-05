@@ -6,6 +6,7 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public class Row extends LinearLayout
 {
@@ -63,11 +64,6 @@ public class Row extends LinearLayout
         this.colorOtherCell = colorOtherCell;
     }
 
-    protected <T extends View> T findView(int id)
-    {
-        return (T) findViewById(id);
-    }
-
     public void update()
     {
         if (!columnsInit)
@@ -96,7 +92,7 @@ public class Row extends LinearLayout
         int i = 0;
         for (String cell : cells)
         {
-            TextView text = findView(i + SHIFT);
+            TextView text = Utils.findView(this, i + SHIFT);
             text.setText(cell);
             setWidth(text, width.getWidth(i), MARGIN, PADDING);
             i ++;

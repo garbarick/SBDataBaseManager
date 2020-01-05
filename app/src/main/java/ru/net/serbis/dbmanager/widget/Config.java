@@ -1,4 +1,7 @@
 package ru.net.serbis.dbmanager.widget;
+
+import android.appwidget.*;
+import android.content.*;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
@@ -6,8 +9,7 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.query.db.*;
 import ru.net.serbis.dbmanager.task.*;
-import android.appwidget.*;
-import android.content.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public class Config extends AsyncActivity
 {
@@ -29,7 +31,7 @@ public class Config extends AsyncActivity
     protected void initMain()
     {
         final ConfigAdapter adapter = new ConfigAdapter(this, queries, R.drawable.sql);
-        ListView main = findView(R.id.queries);
+        ListView main = Utils.findView(this ,R.id.queries);
         main.setAdapter(adapter);
         main.setOnItemClickListener(
             new AdapterView.OnItemClickListener()
@@ -61,7 +63,7 @@ public class Config extends AsyncActivity
 
     private void initOk(final ConfigAdapter adapter)
     {
-        Button button = findView(R.id.ok);
+        Button button = Utils.findView(this, R.id.ok);
         button.setOnClickListener(
             new View.OnClickListener()
             {
@@ -88,7 +90,7 @@ public class Config extends AsyncActivity
 
     private void initCancel()
     {
-        Button button = findView(R.id.cancel);
+        Button button = Utils.findView(this, R.id.cancel);
         button.setOnClickListener(
             new View.OnClickListener()
             {

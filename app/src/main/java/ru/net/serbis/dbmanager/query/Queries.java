@@ -57,11 +57,8 @@ public class Queries extends Folder
                 @Override
                 public void onItemClick(AdapterView parent, View view, int position, long id)
                 {               
-                    Intent intent = new Intent(getIntent());
-                    intent.setClass(Queries.this, Table.class);
                     Query query = (Query) parent.getItemAtPosition(position);
-                    intent.putExtra(Table.QUERY, query);
-                    startActivity(intent);
+                    new QueryExecutor(Queries.this, query);
                 }
             }
         );

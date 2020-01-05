@@ -1,12 +1,13 @@
 package ru.net.serbis.dbmanager.app;
-import android.app.*;
+
+import android.content.*;
 import android.graphics.drawable.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.adapter.*;
 
 public class AppAdapter extends Adapter<App>
 {
-    public AppAdapter(Activity context, List<App> objects)
+    public AppAdapter(Context context, List<App> objects)
     {
         super(context, objects);
     }

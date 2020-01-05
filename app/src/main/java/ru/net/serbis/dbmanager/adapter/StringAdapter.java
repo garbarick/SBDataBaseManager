@@ -1,11 +1,11 @@
 package ru.net.serbis.dbmanager.adapter;
 
-import android.app.*;
+import android.content.*;
 import java.util.*;
 
 public class StringAdapter extends IconAdapter<String>
 {
-    public StringAdapter(Activity context, List<String> objects, int iconId)
+    public StringAdapter(Context context, List<String> objects, int iconId)
     {
         super(context, objects, iconId);
     }

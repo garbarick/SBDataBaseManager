@@ -39,7 +39,7 @@ public class Tables extends Folder
     {
         try
         {
-            for (List<String> row : new DB(this, app, db).select(
+            for (List<String> row : new DB(this, appDb).select(
                 "select name" +
                 "  from sqlite_master" +
                 " where type = 'table'" +

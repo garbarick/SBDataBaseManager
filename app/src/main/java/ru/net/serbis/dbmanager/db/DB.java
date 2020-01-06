@@ -30,6 +30,11 @@ public class DB
         this.thisApp = new App(context.getPackageName());
     }
     
+    public DB(Context context, AppDb appDb)
+    {
+        this(context, appDb.getApp(), appDb.getDb());
+    }
+    
     private <T> T run(Call<T> call)
     {
         try

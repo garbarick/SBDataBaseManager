@@ -5,7 +5,6 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
-import ru.net.serbis.dbmanager.app.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.query.*;
@@ -17,8 +16,7 @@ public class Table extends AsyncActivity implements Width.Listener
     public static final String TABLE = "table";
     public static final String QUERY = "query";
 
-    private App app;
-    private String db;
+    private AppDb appDb;
     private Query query;
     private List<List<String>> rows;
     private Width width;
@@ -33,8 +31,7 @@ public class Table extends AsyncActivity implements Width.Listener
         setContentView(R.layout.content);
 
         Intent intent = getIntent();
-        app = (App) intent.getSerializableExtra(DataBases.APP);
-        db = intent.getStringExtra(DataBases.DB);
+        appDb = Utils.getAppDb(intent);
         if (intent.hasExtra(TABLE))
         {
             String table = intent.getStringExtra(TABLE);
@@ -102,7 +99,7 @@ public class Table extends AsyncActivity implements Width.Listener
     {
         try
         {
-            rows = new DB(this, app, db).select(query.getQuery(), true, true, query.getBindArray());
+            rows = new DB(this, appDb).select(query.getQuery(), true, true, query.getBindArray());
         }
         catch (Exception e)
         {

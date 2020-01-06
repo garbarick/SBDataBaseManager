@@ -8,9 +8,16 @@ import ru.net.serbis.dbmanager.*;
 
 public class Storage extends App
 {
+    public static final String NAME = "storage";
+    
+    public Storage()
+    {
+        super(NAME);
+    }
+    
     public Storage(Context context)
     {
-        super("storage");
+        this();
         setLabel("Storage");
         setIcon(context.getResources().getDrawable(android.R.drawable.ic_menu_directions));
     }

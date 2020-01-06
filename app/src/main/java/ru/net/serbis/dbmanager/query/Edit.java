@@ -6,6 +6,7 @@ import android.os.*;
 import android.view.*;
 import android.widget.*;
 import ru.net.serbis.dbmanager.*;
+import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.table.*;
 import ru.net.serbis.dbmanager.util.*;
 
@@ -13,6 +14,7 @@ public class Edit extends Activity
 {
     private EditText editName;
     private EditText editQuery;
+    private AppDb appDp;
     private Query query;
     
     @Override
@@ -26,6 +28,7 @@ public class Edit extends Activity
         editQuery = Utils.findView(this, R.id.query);
         
         Intent intent = getIntent();
+        appDp = Utils.getAppDb(intent);
         if (intent.hasExtra(Table.QUERY))
         {
             query = (Query) intent.getSerializableExtra(Table.QUERY);
@@ -85,7 +88,7 @@ public class Edit extends Activity
             {
                 public void onClick(View view)
                 {
-                    new QueryExecutor(Edit.this, getQuery(query));
+                    new QueryExecutor(Edit.this, new AppDbQuery(appDp, getQuery(query)));
                 }
             }
         );

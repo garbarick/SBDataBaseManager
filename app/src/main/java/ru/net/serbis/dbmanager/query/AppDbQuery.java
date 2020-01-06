@@ -1,6 +1,7 @@
 package ru.net.serbis.dbmanager.query;
 
 import ru.net.serbis.dbmanager.app.*;
+import ru.net.serbis.dbmanager.db.*;
 
 public class AppDbQuery
 {
@@ -13,6 +14,11 @@ public class AppDbQuery
         this.app = app;
         this.db = db;
         this.query = query;
+    }
+    
+    public AppDbQuery(AppDb appDb, Query query)
+    {
+        this(appDb.getApp(), appDb.getDb(), query);
     }
 
     public App getApp()

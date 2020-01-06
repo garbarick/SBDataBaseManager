@@ -58,7 +58,7 @@ public class Queries extends Folder
                 public void onItemClick(AdapterView parent, View view, int position, long id)
                 {               
                     Query query = (Query) parent.getItemAtPosition(position);
-                    new QueryExecutor(Queries.this, query);
+                    new QueryExecutor(Queries.this, new AppDbQuery(appDb, query));
                 }
             }
         );
@@ -72,7 +72,7 @@ public class Queries extends Folder
         try
         {
             queries.clear();
-            queries.addAll(helper.getQueries(app.getPackage(), db));
+            queries.addAll(helper.getQueries(appDb.getApp().getPackage(), appDb.getDb()));
         }
         catch (Exception e)
         {
@@ -109,8 +109,8 @@ public class Queries extends Folder
             case R.id.newQuery:
                 {
                     Intent intent = new Intent(Queries.this, Edit.class);
-                    intent.putExtra(DataBases.APP, app);
-                    intent.putExtra(DataBases.DB, db);
+                    intent.putExtra(DataBases.APP, appDb.getApp());
+                    intent.putExtra(DataBases.DB, appDb.getDb());
                     startActivityForResult(intent, NEW_QUERY_REQUEST);
                 }
                 return true;
@@ -147,8 +147,8 @@ public class Queries extends Folder
                 {
                     Intent intent = new Intent(Queries.this, Edit.class);
                     intent.putExtra(Table.QUERY, query);
-                    intent.putExtra(DataBases.APP, app);
-                    intent.putExtra(DataBases.DB, db);
+                    intent.putExtra(DataBases.APP, appDb.getApp());
+                    intent.putExtra(DataBases.DB, appDb.getDb());
                     startActivityForResult(intent, EDIT_QUERY_REQUEST);
                 }
                 break;
@@ -170,7 +170,7 @@ public class Queries extends Folder
                 case NEW_QUERY_REQUEST:
                     {
                         Query query = (Query) data.getSerializableExtra(Table.QUERY);
-                        helper.addQuery(query, app.getPackage(), db);
+                        helper.addQuery(query, appDb.getApp().getPackage(), appDb.getDb());
                     }
                     break;
 

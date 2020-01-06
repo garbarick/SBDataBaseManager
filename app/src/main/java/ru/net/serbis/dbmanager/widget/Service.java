@@ -9,6 +9,6 @@ public class Service extends RemoteViewsService
     @Override
     public RemoteViewsFactory onGetViewFactory(Intent intent)
     {
-        return (new Provider(getApplicationContext(), intent));
+        return new Provider(getApplicationContext(), intent);
     }
 }

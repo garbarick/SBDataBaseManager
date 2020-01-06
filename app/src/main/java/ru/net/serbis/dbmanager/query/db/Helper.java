@@ -253,8 +253,10 @@ public class Helper extends SQLiteOpenHelper
 
     private AppDbQuery getQuery(Cursor cursor)
     {
+        String packageName = cursor.getString(1);
+        App app = Storage.NAME.equals(packageName) ? new Storage() : new App(packageName);
         return new AppDbQuery(
-            new App(cursor.getString(1)),
+            app,
             cursor.getString(2),
             new Query(
                 cursor.getLong(0),

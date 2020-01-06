@@ -75,7 +75,8 @@ public class Config extends AsyncActivity
                         AppDbQuery query = queries.get(checked);
                         helper.addWidget(widgetId, query.getQuery().getId());
 
-                        new Widget().init(Config.this, widgetId);
+                        WidgetBase widget = getWidget();
+                        widget.init(Config.this, widgetId);
                         
                         Intent intent = new Intent();
                         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
@@ -100,5 +101,20 @@ public class Config extends AsyncActivity
                 }
             }
         );
+    }
+    
+    public WidgetBase getWidget()
+    {
+        try
+        {
+            AppWidgetManager widgetManager = AppWidgetManager.getInstance(this);
+            Class clazz = Class.forName(widgetManager.getAppWidgetInfo(widgetId).provider.getClassName());
+            return (WidgetBase) clazz.newInstance();
+        }
+        catch (Throwable e)
+        {
+            Log.info(this, "error on initWidget", e);
+            return null;
+        }
     }
 }

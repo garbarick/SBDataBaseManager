@@ -19,6 +19,10 @@ public class QueryStart extends WidgetBase
         RemoteViews views = getRemoteView(context, manager, id);
         
         AppDbQuery query = getQuery(context, id);
+        if (query == null)
+        {
+            return;
+        }
         views.setTextViewText(R.id.name, query.getQuery().getName());
         
         views.setOnClickPendingIntent(R.id.start, getPendingIntent(context, START, id));

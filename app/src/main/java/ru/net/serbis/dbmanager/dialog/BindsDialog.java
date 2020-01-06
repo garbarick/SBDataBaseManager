@@ -5,13 +5,13 @@ import android.content.*;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
-import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.adapter.*;
 import ru.net.serbis.dbmanager.util.*;
 
 public abstract class BindsDialog extends AlertDialog.Builder implements DialogInterface.OnClickListener
 {
     private ListView list;
+    private BindsAdapter adapter;
     private Context context;
     private boolean closeParent;
 
@@ -23,7 +23,7 @@ public abstract class BindsDialog extends AlertDialog.Builder implements DialogI
         setTitle(name);
         
         list = new ListView(context);  
-        BindsAdapter adapter = new BindsAdapter(context, names);
+        adapter = new BindsAdapter(context, names);
         list.setAdapter(adapter);
         setView(list);
 
@@ -53,11 +53,9 @@ public abstract class BindsDialog extends AlertDialog.Builder implements DialogI
     private void onClickOk()
     {
         List<String> values = new ArrayList<String>();
-        for(int i = 0; i < list.getChildCount(); i++)
+        for(int i = 0; i < adapter.getCount(); i++)
         {
-            View view = list.getChildAt(i);
-            EditText value = Utils.findView(view, R.id.value);
-            values.add(value.getText().toString());
+            values.add(adapter.getItem(i).getValue());
         }
         ready(values);
     }

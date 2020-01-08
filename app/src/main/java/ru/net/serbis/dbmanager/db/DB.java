@@ -35,32 +35,32 @@ public class DB
         this(context, appDb.getApp(), appDb.getDb());
     }
     
-    private <T> T run(Call<T> call)
+    private <T> T run(Call<T> call, boolean read)
     {
         try
         {
-            return runInDb(call);
+            return runInDb(call, read);
         }
         catch (SQLiteCantOpenDatabaseException openError)
         {
             try
             {
-                return runByChmod(call);
+                return runByChmod(call, read);
             }
             catch (SQLiteDatabaseLockedException lockError)
             {
-                return runByCopy(call);
+                return runByCopy(call, read);
             }
         }
     }
     
-    private <T> T runInDb(Call<T> call)
+    private <T> T runInDb(Call<T> call, boolean read)
     {
         File file = app.getDBFile(db);
-        return runInDB(file, call);
+        return runInDB(file, call, read);
     }
 
-    private <T> T runByChmod(Call<T> call)
+    private <T> T runByChmod(Call<T> call, boolean read)
     {
         File file = app.getDBFile(db);
         File journal = app.getJournalFile(db);
@@ -70,7 +70,7 @@ public class DB
                 "chmod 666 " + file.getAbsolutePath(),
                 "chmod 666 " + journal.getAbsolutePath());
 
-            return runInDB(file, call);
+            return runInDB(file, call, read);
         }
         finally
         {
@@ -80,7 +80,7 @@ public class DB
         }
     }
 
-    private <T> T runByCopy(Call<T> call)
+    private <T> T runByCopy(Call<T> call, boolean read)
     {
         File file = app.getDBFile(db);
         File journal = app.getJournalFile(db);
@@ -95,7 +95,7 @@ public class DB
                 "chmod 666 " + contextFile.getAbsolutePath(),
                 "chmod 666 " + contextJournal.getAbsolutePath());
 
-            return runInDB(contextFile, call);
+            return runInDB(contextFile, call, read);
         }
         finally
         {
@@ -105,7 +105,7 @@ public class DB
         }
     }
     
-    private <T> T runInDB(File file, Call<T> call)
+    private <T> T runInDB(File file, Call<T> call, boolean read)
     {
         SQLiteDatabase db = null;
         try
@@ -114,7 +114,7 @@ public class DB
                 file.getAbsolutePath(),
                 null,
                 SQLiteDatabase.NO_LOCALIZED_COLLATORS |
-                SQLiteDatabase.OPEN_READWRITE);
+                (read ? SQLiteDatabase.OPEN_READONLY : SQLiteDatabase.OPEN_READWRITE));
                 
             return call.call(db);
         }
@@ -134,6 +134,7 @@ public class DB
 
     public List<List<String>> select(final String query, final boolean withColumnName, final boolean withRowNum, final String... args)
     {
+        boolean read = query.toLowerCase().startsWith("select ");
         return run(
             new Call<List<List<String>>>()
             {
@@ -141,7 +142,7 @@ public class DB
                 {
                     return selectInDB(db, query, withColumnName, withRowNum, args);
                 }
-            }
+            }, read
         );
     }
 

@@ -2,7 +2,7 @@ package ru.net.serbis.dbmanager.folder;
 
 import android.content.*;
 import ru.net.serbis.dbmanager.*;
-import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.task.*;
 import ru.net.serbis.dbmanager.util.*;
 

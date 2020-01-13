@@ -5,7 +5,7 @@ import android.content.*;
 import android.widget.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.query.*;
-import ru.net.serbis.dbmanager.query.db.*;
+import ru.net.serbis.dbmanager.db.*;
 
 public class QueryStart extends WidgetBase
 {

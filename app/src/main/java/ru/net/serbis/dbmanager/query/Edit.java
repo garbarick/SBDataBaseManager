@@ -6,7 +6,7 @@ import android.os.*;
 import android.view.*;
 import android.widget.*;
 import ru.net.serbis.dbmanager.*;
-import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.table.*;
 import ru.net.serbis.dbmanager.util.*;
 

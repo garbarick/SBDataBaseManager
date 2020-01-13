@@ -1,4 +1,4 @@
-package ru.net.serbis.dbmanager.db;
+package ru.net.serbis.dbmanager.app.db;
 
 import android.content.*;
 import android.database.*;
@@ -17,22 +17,15 @@ public class DB
     }
 
     private Shell sh = new Shell();
-    private App app;
-    private String db;
+    private AppDb appDb;
     private Context context;
-    private App thisApp;
+    private ThisApp thisApp;
 
-    public DB(Context context, App app, String db)
-    {
-        this.app = app;
-        this.db = db;
-        this.context = context;
-        this.thisApp = new App(context.getPackageName());
-    }
-    
     public DB(Context context, AppDb appDb)
     {
-        this(context, appDb.getApp(), appDb.getDb());
+        this.appDb = appDb;
+        this.context = context;
+        this.thisApp = new ThisApp(context.getPackageName());
     }
     
     private <T> T run(Call<T> call, boolean read)
@@ -56,14 +49,14 @@ public class DB
     
     private <T> T runInDb(Call<T> call, boolean read)
     {
-        File file = app.getDBFile(db);
+        File file = appDb.getDBFile();
         return runInDB(file, call, read);
     }
 
     private <T> T runByChmod(Call<T> call, boolean read)
     {
-        File file = app.getDBFile(db);
-        File journal = app.getJournalFile(db);
+        File file = appDb.getDBFile();
+        File journal = appDb.getJournalFile();
         try
         {
             sh.command(
@@ -82,11 +75,11 @@ public class DB
 
     private <T> T runByCopy(Call<T> call, boolean read)
     {
-        File file = app.getDBFile(db);
-        File journal = app.getJournalFile(db);
-        File contextFile = thisApp.getDBFile(app.getPackage(), db);
-        File contextJournal = thisApp.getJournalFile(app.getPackage(), db);
-        thisApp.getDataBaseDir(app.getPackage()).mkdirs();
+        File file = appDb.getDBFile();
+        File journal = appDb.getJournalFile();
+        File contextFile = thisApp.getDBFile(appDb);
+        File contextJournal = thisApp.getJournalFile(appDb);
+        thisApp.getDataBaseDir(appDb).mkdirs();
         try
         {
             sh.command(
@@ -101,7 +94,7 @@ public class DB
         {
             contextFile.delete();
             contextJournal.delete();
-            thisApp.getDataBaseDir(app.getPackage()).delete();
+            thisApp.getDataBaseDir(appDb).delete();
         }
     }
     

@@ -22,7 +22,7 @@
         </activity>
         
         <activity
-            android:name=".db.DataBases"
+            android:name=".app.db.DataBases"
             android:launchMode="singleTask"
             android:stateNotNeeded="true"/>
         
@@ -32,7 +32,7 @@
             android:stateNotNeeded="true"/>
         
         <activity
-            android:name=".db.Tables"
+            android:name=".app.db.Tables"
             android:launchMode="singleTask"
             android:stateNotNeeded="true"/>
         

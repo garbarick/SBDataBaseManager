@@ -7,9 +7,9 @@ import ru.net.serbis.dbmanager.sh.*;
 
 public class App implements Comparable, Serializable
 {
-    private String label;
-    private String packageName;
-    private transient Drawable icon;
+    protected String label;
+    protected String packageName;
+    protected transient Drawable icon;
 
     public App(String packageName)
     {
@@ -52,29 +52,14 @@ public class App implements Comparable, Serializable
         return new File("/data/data/" + packageName + "/databases");
     }
 	
-    public File getDataBaseDir(String sub)
-    {
-        return new File(getDataBaseDir(), sub);
-    }
-	
     public File getDBFile(String db)
     {
         return new File(getDataBaseDir(), db);
-    }
-    
-	public File getDBFile(String sub, String db)
-    {
-        return new File(getDataBaseDir(sub), db);
     }
 	
     public File getJournalFile(String db)
     {
         return getDBFile(db + "-journal");
-    }
-    
-	public File getJournalFile(String sub, String db)
-    {
-        return getDBFile(sub, db + "-journal");
     }
     
     @Override

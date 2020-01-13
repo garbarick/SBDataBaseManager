@@ -6,9 +6,9 @@ import android.widget.*;
 import android.widget.RemoteViewsService.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
-import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.query.*;
-import ru.net.serbis.dbmanager.query.db.*;
+import ru.net.serbis.dbmanager.db.*;
 
 public class Provider implements RemoteViewsFactory
 {
@@ -29,7 +29,7 @@ public class Provider implements RemoteViewsFactory
         {
             Helper helper = new Helper(context);
             AppDbQuery query = helper.getQuery(id);
-            List<List<String>> table = new DB(context, query.getApp(), query.getDb()).select(query.getQuery().getQuery(), true, false);
+            List<List<String>> table = new DB(context, query.getAppDb()).select(query.getQuery().getQuery(), true, false);
 
             List<String> keys = table.get(0);
             List<String> values = table.size() > 1 ? table.get(1) : null;

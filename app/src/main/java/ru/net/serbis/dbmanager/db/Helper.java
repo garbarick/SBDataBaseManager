@@ -1,4 +1,4 @@
-package ru.net.serbis.dbmanager.query.db;
+package ru.net.serbis.dbmanager.db;
 
 import android.content.*;
 import android.database.*;
@@ -6,28 +6,31 @@ import android.database.sqlite.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.*;
+import ru.net.serbis.dbmanager.app.db.*;
+import ru.net.serbis.dbmanager.db.table.*;
 import ru.net.serbis.dbmanager.query.*;
-import ru.net.serbis.dbmanager.query.db.table.*;
 
-import ru.net.serbis.dbmanager.query.db.table.Queries;
+import ru.net.serbis.dbmanager.db.table.DataBases;
+import ru.net.serbis.dbmanager.db.table.Queries;
+import ru.net.serbis.dbmanager.db.table.migrate.*;
 
 public class Helper extends SQLiteOpenHelper
 {
     public Helper(Context context)
     {
-        super(context, "db", null, 2);
+        super(context, "db", null, 3);
     }
 
     @Override
     public void onCreate(SQLiteDatabase db)
     {
-        createTables(db);
+        createTables(db, 0, 0);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        createTables(db);
+        createTables(db, oldVersion, newVersion);
     }
 
     @Override
@@ -42,10 +45,14 @@ public class Helper extends SQLiteOpenHelper
         db.setForeignKeyConstraintsEnabled(true);
     }
 
-    private void createTables(SQLiteDatabase db)
+    private void createTables(SQLiteDatabase db, int oldVersion, int newVersion)
     {
-        new Queries().call(db);
-        new Widgets().call(db);
+        new DataBases().make(db, oldVersion, newVersion);
+        new Queries().make(db, oldVersion, newVersion);
+        new Widgets().make(db, oldVersion, newVersion);
+        
+        //migrate
+        new From2().make(db, oldVersion, newVersion);
     }
 
     private <T> T runInDB(Call<T> call, boolean write)
@@ -87,7 +94,7 @@ public class Helper extends SQLiteOpenHelper
     private List<Query> getQueries(SQLiteDatabase db, String packageName, String dbName)
     {
         List<Query> result = new ArrayList<Query>();
-        Cursor cursor  = db.query("queries", new String[]{"id", "name", "query"}, "package = ? and db = ?", new String[]{packageName, dbName}, null, null, "name");
+        Cursor cursor  = db.query("queries q, databases d", new String[]{"q.id", "q.name", "q.query"}, "d.id = q.db_id and d.package = ? and d.name = ?", new String[]{packageName, dbName}, null, null, "q.name");
         if (cursor.moveToFirst())
         {
             do
@@ -103,27 +110,40 @@ public class Helper extends SQLiteOpenHelper
         return result;
     }
 
-    public boolean addQuery(final Query query, final String packageName, final String dbName)
+    public boolean addQuery(final Query query, final AppDb appDb)
     {
         return runInDB(
             new Call<Boolean>()
             {
                 public Boolean call(SQLiteDatabase db)
                 {
-                    return addQuery(db, query, packageName, dbName);
+                    return addQuery(db, query, appDb);
                 }
             },
             true
         );
     }
+    
+    private long getDbId(SQLiteDatabase db, AppDb appDb)
+    {
+        Cursor cursor  = db.query("databases", new String[]{"id"}, "package = ? and name = ?", new String[]{appDb.getApp().getPackage(), appDb.getDb()}, null, null, null);
+        if (cursor.moveToFirst())
+        {
+            return cursor.getLong(0);
+        }
+        
+        ContentValues values = new ContentValues();
+        values.put("package", appDb.getApp().getPackage());
+        values.put("name", appDb.getDb());
+        return db.insert("databases", null, values);
+    }
 
-    private boolean addQuery(SQLiteDatabase db, Query query, String packageName, String dbName)
+    private boolean addQuery(SQLiteDatabase db, Query query, AppDb appDb)
     {
         try
         {
             ContentValues values = new ContentValues();
-            values.put("package", packageName);
-            values.put("db", dbName);
+            values.put("db_id", getDbId(db, appDb));
             values.put("name", query.getName());
             values.put("query", query.getQuery());
 
@@ -215,7 +235,7 @@ public class Helper extends SQLiteOpenHelper
     private List<AppDbQuery> getQueries(SQLiteDatabase db)
     {
         List<AppDbQuery> result = new ArrayList<AppDbQuery>();
-        Cursor cursor  = db.query("queries", new String[]{"id", "package", "db", "name", "query"}, null, null, null, null, "name");
+        Cursor cursor  = db.query("queries q, databases d", new String[]{"q.id", "d.package", "d.name", "q.name", "q.query"}, "d.id = q.db_id", null, null, null, "q.name");
         if (cursor.moveToFirst())
         {
             do
@@ -243,7 +263,7 @@ public class Helper extends SQLiteOpenHelper
 
     private AppDbQuery getQuery(SQLiteDatabase db, Integer widgetId)
     {
-        Cursor cursor  = db.query("queries", new String[]{"id", "package", "db", "name", "query"}, "id = (select query_id from widgets where id = ?)", new String[]{widgetId.toString()}, null, null, null);
+        Cursor cursor  = db.query("queries q, databases d, widgets w", new String[]{"q.id", "d.package", "d.name", "q.name", "q.query"}, "d.id = q.db_id and w.query_id = q.id and w.id = ?", new String[]{widgetId.toString()}, null, null, null);
         if (cursor.moveToFirst())
         {
             return getQuery(cursor);
@@ -256,8 +276,7 @@ public class Helper extends SQLiteOpenHelper
         String packageName = cursor.getString(1);
         App app = Storage.NAME.equals(packageName) ? new Storage() : new App(packageName);
         return new AppDbQuery(
-            app,
-            cursor.getString(2),
+            new AppDb(app, cursor.getString(2)),
             new Query(
                 cursor.getLong(0),
                 cursor.getString(3),

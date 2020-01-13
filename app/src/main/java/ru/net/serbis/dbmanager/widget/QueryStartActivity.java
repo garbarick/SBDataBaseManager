@@ -3,7 +3,7 @@ package ru.net.serbis.dbmanager.widget;
 import android.app.*;
 import android.appwidget.*;
 import ru.net.serbis.dbmanager.query.*;
-import ru.net.serbis.dbmanager.query.db.*;
+import ru.net.serbis.dbmanager.db.*;
 
 public class QueryStartActivity extends Activity
 {

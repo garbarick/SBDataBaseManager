@@ -3,7 +3,7 @@ package ru.net.serbis.dbmanager.query;
 import android.content.*;
 import java.util.*;
 import java.util.regex.*;
-import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.table.*;
 import ru.net.serbis.dbmanager.util.*;
@@ -65,8 +65,9 @@ public class QueryExecutor
     private void readyQuery(Query query)
     {
         Intent intent = new Intent(context, Table.class);
-        intent.putExtra(DataBases.APP, appDbQuery.getApp());
-        intent.putExtra(DataBases.DB, appDbQuery.getDb());
+        AppDb appDb = appDbQuery.getAppDb();
+        intent.putExtra(DataBases.APP, appDb.getApp());
+        intent.putExtra(DataBases.DB, appDb.getDb());
         intent.putExtra(Table.QUERY, query);
         
         if (closeParent)

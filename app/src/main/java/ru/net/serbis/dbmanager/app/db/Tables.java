@@ -1,4 +1,4 @@
-package ru.net.serbis.dbmanager.db;
+package ru.net.serbis.dbmanager.app.db;
 
 import android.content.*;
 import android.view.*;

@@ -5,9 +5,9 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
+import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.folder.*;
-import ru.net.serbis.dbmanager.query.db.*;
 import ru.net.serbis.dbmanager.table.*;
 
 public class Queries extends Folder
@@ -170,7 +170,7 @@ public class Queries extends Folder
                 case NEW_QUERY_REQUEST:
                     {
                         Query query = (Query) data.getSerializableExtra(Table.QUERY);
-                        helper.addQuery(query, appDb.getApp().getPackage(), appDb.getDb());
+                        helper.addQuery(query, appDb);
                     }
                     break;
 

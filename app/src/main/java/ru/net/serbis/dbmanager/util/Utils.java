@@ -4,7 +4,7 @@ import android.app.*;
 import android.content.*;
 import android.view.*;
 import ru.net.serbis.dbmanager.app.*;
-import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.app.db.*;
 
 public class Utils
 {

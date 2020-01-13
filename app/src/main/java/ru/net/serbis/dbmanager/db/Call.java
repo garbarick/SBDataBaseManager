@@ -1,4 +1,4 @@
-package ru.net.serbis.dbmanager.query.db;
+package ru.net.serbis.dbmanager.db;
 
 import android.database.sqlite.*;
 

@@ -1,34 +1,21 @@
 package ru.net.serbis.dbmanager.query;
 
-import ru.net.serbis.dbmanager.app.*;
-import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.app.db.*;
 
 public class AppDbQuery
 {
-    private App app;
-    private String db;
+    private AppDb appDb;
     private Query query;
-    
-    public AppDbQuery(App app, String db, Query query)
-    {
-        this.app = app;
-        this.db = db;
-        this.query = query;
-    }
     
     public AppDbQuery(AppDb appDb, Query query)
     {
-        this(appDb.getApp(), appDb.getDb(), query);
+        this.appDb = appDb;
+        this.query = query;
     }
 
-    public App getApp()
+    public AppDb getAppDb()
     {
-        return app;
-    }
-
-    public String getDb()
-    {
-        return db;
+        return appDb;
     }
     
     public Query getQuery()

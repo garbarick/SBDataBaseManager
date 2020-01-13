@@ -1,5 +1,6 @@
-package ru.net.serbis.dbmanager.db;
+package ru.net.serbis.dbmanager.app.db;
 
+import java.io.*;
 import ru.net.serbis.dbmanager.app.*;
 
 public class AppDb
@@ -21,5 +22,15 @@ public class AppDb
     public String getDb()
     {
         return db;
+    }
+    
+    public File getDBFile()
+    {
+        return app.getDBFile(db);
+    }
+    
+    public File getJournalFile()
+    {
+        return app.getJournalFile(db);
     }
 }

@@ -46,10 +46,15 @@
             android:stateNotNeeded="true"/>
         
         <activity
-            android:name=".table.Table"
+            android:name=".result.Result"
             android:launchMode="singleTask"
             android:stateNotNeeded="true"/>
-        
+
+        <activity
+            android:name=".param.Params"
+            android:launchMode="singleTask"
+            android:stateNotNeeded="true"/>
+
         <activity
             android:name=".widget.Config">
 

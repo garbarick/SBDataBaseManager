@@ -5,19 +5,13 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
-import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.folder.*;
-import ru.net.serbis.dbmanager.table.*;
 
 public class Queries extends Folder
 {
-    private final static int NEW_QUERY_REQUEST = 0;
-    private final static int EDIT_QUERY_REQUEST = 1;
-
     private List<Query> queries = new ArrayList<Query>();
     private Helper helper;
-    private boolean init = false;
 
     @Override
     protected void initCreate()
@@ -29,41 +23,18 @@ public class Queries extends Folder
     @Override
     protected void initMain()
     {
-        if (init)
-        {
-            refreshContent();
-        }
-        else
-        {
-            initMainContent();
-        }
-    }
-
-    private void refreshContent()
-    {
-        ListView main = getMain();
-        QueryAdapter adapter = (QueryAdapter) main.getAdapter();
-        adapter.notifyDataSetChanged();
-    }
-
-    private void initMainContent()
-    {
         QueryAdapter adapter = new QueryAdapter(this, queries, R.drawable.sql);
         ListView main = getMain();
         main.setAdapter(adapter);
-        main.setOnItemClickListener(
-            new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView parent, View view, int position, long id)
-                {               
-                    Query query = (Query) parent.getItemAtPosition(position);
-                    new QueryExecutor(Queries.this, new AppDbQuery(appDb, query));
-                }
-            }
-        );
+        main.setOnItemClickListener(this);
         registerForContextMenu(main);
-        init = true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id)
+    {               
+        Query query = (Query) parent.getItemAtPosition(position);
+        new QueryExecutor(Queries.this, new AppDbQuery(appDb, query));
     }
 
     @Override
@@ -109,9 +80,9 @@ public class Queries extends Folder
             case R.id.newQuery:
                 {
                     Intent intent = new Intent(Queries.this, Edit.class);
-                    intent.putExtra(DataBases.APP, appDb.getApp());
-                    intent.putExtra(DataBases.DB, appDb.getDb());
-                    startActivityForResult(intent, NEW_QUERY_REQUEST);
+                    intent.putExtra(Constants.APP, appDb.getApp());
+                    intent.putExtra(Constants.DB, appDb.getDb());
+                    startActivityForResult(intent, Constants.NEW_REQUEST);
                 }
                 return true;
 
@@ -146,10 +117,10 @@ public class Queries extends Folder
             case R.id.editQuery:
                 {
                     Intent intent = new Intent(Queries.this, Edit.class);
-                    intent.putExtra(Table.QUERY, query);
-                    intent.putExtra(DataBases.APP, appDb.getApp());
-                    intent.putExtra(DataBases.DB, appDb.getDb());
-                    startActivityForResult(intent, EDIT_QUERY_REQUEST);
+                    intent.putExtra(Constants.QUERY, query);
+                    intent.putExtra(Constants.APP, appDb.getApp());
+                    intent.putExtra(Constants.DB, appDb.getDb());
+                    startActivityForResult(intent, Constants.EDIT_REQUEST);
                 }
                 break;
 
@@ -167,16 +138,16 @@ public class Queries extends Folder
         {
             switch (requestCode)
             {
-                case NEW_QUERY_REQUEST:
+                case Constants.NEW_REQUEST:
                     {
-                        Query query = (Query) data.getSerializableExtra(Table.QUERY);
+                        Query query = (Query) data.getSerializableExtra(Constants.QUERY);
                         helper.addQuery(query, appDb);
                     }
                     break;
 
-                case EDIT_QUERY_REQUEST:
+                case Constants.EDIT_REQUEST:
                     {
-                        Query query = (Query) data.getSerializableExtra(Table.QUERY);
+                        Query query = (Query) data.getSerializableExtra(Constants.QUERY);
                         helper.updateQuery(query);
                     }
                     break;

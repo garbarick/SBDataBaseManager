@@ -3,10 +3,11 @@ package ru.net.serbis.dbmanager.task;
 import android.app.*;
 import android.os.*;
 import android.view.*;
+import android.widget.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.util.*;
 
-public abstract class AsyncActivity extends Activity implements Async
+public abstract class AsyncActivity extends Activity implements Async, AdapterView.OnItemClickListener
 {
     @Override
     protected void onCreate(Bundle savedInstanceState)

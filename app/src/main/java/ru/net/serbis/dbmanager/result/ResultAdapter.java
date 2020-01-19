@@ -1,4 +1,4 @@
-package ru.net.serbis.dbmanager.table;
+package ru.net.serbis.dbmanager.result;
 
 import android.app.*;
 import android.view.*;
@@ -6,11 +6,11 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 
-public class TableAdapter extends ArrayAdapter<List<String>>
+public class ResultAdapter extends ArrayAdapter<List<String>>
 {
     private Width width;
     
-    public TableAdapter(Activity context, List<List<String>> objects, Width width)
+    public ResultAdapter(Activity context, List<List<String>> objects, Width width)
     {
         super(context, R.layout.content, objects);
         this.width = width;

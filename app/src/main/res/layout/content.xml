@@ -22,7 +22,7 @@
 			android:layout_height="match_parent"
 			android:orientation="vertical">
 
-			<ru.net.serbis.dbmanager.table.Row
+			<ru.net.serbis.dbmanager.result.Row
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
 				android:id="@+id/header"/>

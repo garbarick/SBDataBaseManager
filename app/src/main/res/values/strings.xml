@@ -7,6 +7,8 @@
 
     <string name="tables">Tables</string>
     <string name="queries">Queries</string>
+    <string name="storage">Storage</string>
+    <string name="params">Params</string>
 
     <string name="newQuery">New Query</string>
     <string name="editQuery">Edit Query</string>
@@ -20,5 +22,10 @@
     <string name="execute">Execute</string>
     <string name="ok">Ok</string>
     <string name="error">Error</string>
+    <string name="info">Info</string>
+ 
+    <string name="charset">Charset</string>
+    <string name="defaultValue">Default</string>
 
+    <string name="queryInfo">Bind parameter: #bind_name#</string>
 </resources>

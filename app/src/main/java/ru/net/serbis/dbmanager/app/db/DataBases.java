@@ -12,9 +12,6 @@ import ru.net.serbis.dbmanager.task.*;
 
 public class DataBases extends AsyncActivity
 {
-    public static final String APP = "app";
-    public static final String DB = "db";
-    
     private List<String> dbs = new ArrayList<String>();
     private App app;
 
@@ -22,7 +19,7 @@ public class DataBases extends AsyncActivity
     protected void initCreate()
     {
         setContentView(R.layout.main);
-        app = (App) getIntent().getSerializableExtra(APP);
+        app = (App) getIntent().getSerializableExtra(Constants.APP);
         setTitle(app.getLabel());
     }
 
@@ -32,19 +29,16 @@ public class DataBases extends AsyncActivity
         StringAdapter adapter = new StringAdapter(this, dbs, R.drawable.app_icon);
         ListView main = getMain();
         main.setAdapter(adapter);
-        main.setOnItemClickListener(
-            new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView parent, View view, int position, long id)
-                {               
-                    Intent intent = new Intent(getIntent());
-                    intent.setClass(DataBases.this, Folders.class);
-                    intent.putExtra(DB, (String) parent.getItemAtPosition(position));
-                    startActivity(intent);
-                }
-            }
-        );
+        main.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id)
+    {               
+        Intent intent = new Intent(getIntent());
+        intent.setClass(DataBases.this, Folders.class);
+        intent.putExtra(Constants.DB, (String) parent.getItemAtPosition(position));
+        startActivity(intent);
     }
 
     @Override

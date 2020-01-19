@@ -7,10 +7,10 @@ import android.view.*;
 import android.widget.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.db.*;
-import ru.net.serbis.dbmanager.table.*;
 import ru.net.serbis.dbmanager.util.*;
+import ru.net.serbis.dbmanager.dialog.*;
 
-public class Edit extends Activity
+public class Edit extends Activity implements View.OnClickListener
 {
     private EditText editName;
     private EditText editQuery;
@@ -29,16 +29,17 @@ public class Edit extends Activity
         
         Intent intent = getIntent();
         appDp = Utils.getAppDb(intent);
-        if (intent.hasExtra(Table.QUERY))
+        if (intent.hasExtra(Constants.QUERY))
         {
-            query = (Query) intent.getSerializableExtra(Table.QUERY);
+            query = (Query) intent.getSerializableExtra(Constants.QUERY);
             editName.setText(query.getName());
             editQuery.setText(query.getQuery());
         }
         
-        initSave();
-        initCancel();
-        initExecute();
+        initButton(R.id.save);
+        initButton(R.id.execute);
+        initButton(R.id.info);
+        initButton(R.id.cancel);
     }
     
     private Query getQuery(Query query)
@@ -49,48 +50,48 @@ public class Edit extends Activity
             editQuery.getText().toString());
     }
     
-    private void initSave()
+    private void initButton(int id)
     {
-        Button button = Utils.findView(this, R.id.save);
-        button.setOnClickListener(
-            new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    Intent intent = new Intent(getIntent());
-                    intent.putExtra(Table.QUERY, getQuery(query));
-                    setResult(RESULT_OK, intent);
-                    finish();
-                }
-            }
-        );
+        Button button = Utils.findView(this, id);
+        button.setOnClickListener(this);
     }
     
-    private void initCancel()
+    @Override
+    public void onClick(View view)
     {
-        Button button = Utils.findView(this, R.id.cancel);
-        button.setOnClickListener(
-            new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    finish();
-                }
-            }
-        );
+        int id = view.getId();
+        switch(id)
+        {
+            case R.id.save:
+                saveAction();
+                break;
+            case R.id.execute:
+                executeAction();
+                break;
+            case R.id.info:
+                infoAction();
+                break;
+            case R.id.cancel:
+                finish();
+                break;
+        }
+    }
+
+    private void saveAction()
+    {
+        Intent intent = new Intent(getIntent());
+        intent.putExtra(Constants.QUERY, getQuery(query));
+        setResult(RESULT_OK, intent);
+        finish();
+    }
+
+    private void executeAction()
+    {
+        new QueryExecutor(this, new AppDbQuery(appDp, getQuery(query)));
     }
     
-    private void initExecute()
+    private void infoAction()
     {
-        Button button = Utils.findView(this, R.id.execute);
-        button.setOnClickListener(
-            new View.OnClickListener()
-            {
-                public void onClick(View view)
-                {
-                    new QueryExecutor(Edit.this, new AppDbQuery(appDp, getQuery(query)));
-                }
-            }
-        );
+        new MessageDialog(this, R.string.info, R.string.queryInfo);
     }
 }

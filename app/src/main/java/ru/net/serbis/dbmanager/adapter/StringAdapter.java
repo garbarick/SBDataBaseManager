@@ -5,7 +5,7 @@ import java.util.*;
 
 public class StringAdapter extends IconAdapter<String>
 {
-    public StringAdapter(Context context, List<String> objects, int iconId)
+    public StringAdapter(Context context, Collection<String> objects, int iconId)
     {
         super(context, objects, iconId);
     }

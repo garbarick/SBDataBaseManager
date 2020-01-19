@@ -6,8 +6,8 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
-import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.task.*;
 import ru.net.serbis.dbmanager.util.*;
 
@@ -30,22 +30,20 @@ public class Config extends AsyncActivity
     @Override
     protected void initMain()
     {
-        final ConfigAdapter adapter = new ConfigAdapter(this, queries, R.drawable.sql);
+        ConfigAdapter adapter = new ConfigAdapter(this, queries, R.drawable.sql);
         ListView main = Utils.findView(this ,R.id.queries);
         main.setAdapter(adapter);
-        main.setOnItemClickListener(
-            new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView parent, View view, int position, long id)
-                {               
-                    adapter.setChecked(position);
-                    adapter.notifyDataSetChanged();
-                }
-            }
-        );
+        main.setOnItemClickListener(this);
         initOk(adapter);
         initCancel();
+    }
+
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id)
+    {   
+        ConfigAdapter adapter = Utils.getAdapter(parent);
+        adapter.setChecked(position);
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -70,20 +68,21 @@ public class Config extends AsyncActivity
                 public void onClick(View view)
                 {
                     int checked = adapter.getChecked();
-                    if (checked > -1)
+                    if (checked <= -1)
                     {
-                        AppDbQuery query = queries.get(checked);
-                        helper.addWidget(widgetId, query.getQuery().getId());
-
-                        WidgetBase widget = getWidget();
-                        widget.init(Config.this, widgetId);
-                        
-                        Intent intent = new Intent();
-                        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-                        setResult(RESULT_OK, intent);
-                        
-                        finish();
+                        return;
                     }
+                    AppDbQuery query = queries.get(checked);
+                    helper.addWidget(widgetId, query.getQuery().getId());
+
+                    WidgetBase widget = getWidget();
+                    widget.init(Config.this, widgetId);
+                        
+                    Intent intent = new Intent();
+                    intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+                    setResult(RESULT_OK, intent);
+                        
+                    finish();
                 }
             }
         );

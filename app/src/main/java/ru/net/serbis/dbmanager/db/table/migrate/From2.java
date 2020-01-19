@@ -8,7 +8,7 @@ public class From2 extends Migrate
     @Override
     protected boolean need(int oldVersion, int newVersion)
     {
-        return oldVersion == 2 && newVersion >= 3;
+        return oldVersion == 2 && newVersion > oldVersion;
     }
 
     @Override

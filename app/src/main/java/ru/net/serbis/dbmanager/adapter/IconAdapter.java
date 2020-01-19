@@ -8,19 +8,19 @@ public abstract class IconAdapter<T> extends Adapter<T>
 {
     private Drawable icon;
     
-    public IconAdapter(Context context, int layout, int rowLayout, List<T> objects, int iconId)
+    public IconAdapter(Context context, int layout, int rowLayout, Collection<T> objects, int iconId)
     {
         super(context, layout, rowLayout, objects);
         initIcon(context, iconId);
     }
     
-    public IconAdapter(Context context, int rowLayout, List<T> objects, int iconId)
+    public IconAdapter(Context context, int rowLayout, Collection<T> objects, int iconId)
     {
         super(context, rowLayout, objects);
         initIcon(context, iconId);
     }
     
-    public IconAdapter(Context context, List<String> objects, int iconId)
+    public IconAdapter(Context context, Collection<String> objects, int iconId)
     {
         super(context, objects);
         initIcon(context, iconId);

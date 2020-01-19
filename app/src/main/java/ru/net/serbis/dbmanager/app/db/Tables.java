@@ -7,7 +7,7 @@ import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.adapter.*;
 import ru.net.serbis.dbmanager.folder.*;
-import ru.net.serbis.dbmanager.table.*;
+import ru.net.serbis.dbmanager.result.*;
 
 public class Tables extends Folder
 {
@@ -19,19 +19,16 @@ public class Tables extends Folder
         StringAdapter adapter = new StringAdapter(this, tables, R.drawable.table);
         ListView main = getMain();
         main.setAdapter(adapter);
-        main.setOnItemClickListener(
-            new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView parent, View view, int position, long id)
-                {               
-                    Intent intent = new Intent(getIntent());
-                    intent.setClass(Tables.this, Table.class);
-                    intent.putExtra(Table.TABLE, (String) parent.getItemAtPosition(position));
-                    startActivity(intent);
-                }
-            }
-        );
+        main.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id)
+    {               
+        Intent intent = new Intent(getIntent());
+        intent.setClass(Tables.this, Result.class);
+        intent.putExtra(Constants.TABLE, (String) parent.getItemAtPosition(position));
+        startActivity(intent);
     }
 
     @Override

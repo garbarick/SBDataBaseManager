@@ -33,6 +33,7 @@ public abstract class BindsDialog extends AlertDialog.Builder implements DialogI
         Dialog dialog = show();
         dialog.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE | WindowManager.LayoutParams.FLAG_ALT_FOCUSABLE_IM);
         dialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+        dialog.setCanceledOnTouchOutside(false);
     }
 
     @Override

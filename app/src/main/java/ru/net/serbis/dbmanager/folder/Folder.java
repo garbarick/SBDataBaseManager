@@ -8,7 +8,6 @@ import ru.net.serbis.dbmanager.util.*;
 
 public abstract class Folder extends AsyncActivity
 {
-    public static final String FOLDER = "folder";
     protected AppDb appDb;
 
     @Override
@@ -18,7 +17,7 @@ public abstract class Folder extends AsyncActivity
         
         Intent intent = getIntent();
         appDb = Utils.getAppDb(intent);
-        String folder = intent.getStringExtra(FOLDER);
+        String folder = intent.getStringExtra(Constants.FOLDER);
         setTitle(appDb.getDb() + " (" + folder + ")");
     }
 }

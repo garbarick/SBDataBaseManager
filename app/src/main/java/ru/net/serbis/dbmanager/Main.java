@@ -25,18 +25,15 @@ public class Main extends AsyncActivity
         AppAdapter adapter = new AppAdapter(this, appList);
         ListView main = getMain();
         main.setAdapter(adapter);
-        main.setOnItemClickListener(
-            new AdapterView.OnItemClickListener()
-            {
-                @Override
-                public void onItemClick(AdapterView parent, View view, int position, long id)
-                {               
-                    Intent intent = new Intent(Main.this, DataBases.class);
-                    intent.putExtra(DataBases.APP, (App) parent.getItemAtPosition(position));
-                    startActivity(intent);
-                }
-            }
-        );
+        main.setOnItemClickListener(this);
+    }
+
+    @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id)
+    {
+        Intent intent = new Intent(Main.this, DataBases.class);
+        intent.putExtra(Constants.APP, (App) parent.getItemAtPosition(position));
+        startActivity(intent);
     }
 
     @Override

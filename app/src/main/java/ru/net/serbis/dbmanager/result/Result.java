@@ -1,4 +1,4 @@
-package ru.net.serbis.dbmanager.table;
+package ru.net.serbis.dbmanager.result;
 
 import android.content.*;
 import android.view.*;
@@ -10,12 +10,10 @@ import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.task.*;
 import ru.net.serbis.dbmanager.util.*;
+import ru.net.serbis.dbmanager.db.*;
 
-public class Table extends AsyncActivity implements Width.Listener
+public class Result extends AsyncActivity implements Width.Listener
 {
-    public static final String TABLE = "table";
-    public static final String QUERY = "query";
-
     private AppDb appDb;
     private Query query;
     private List<List<String>> rows;
@@ -24,6 +22,7 @@ public class Table extends AsyncActivity implements Width.Listener
     private Row header;
     private ListView list;
     private String error;
+    private Map<String, String> params;
 
     @Override
     protected void initCreate()
@@ -32,15 +31,16 @@ public class Table extends AsyncActivity implements Width.Listener
 
         Intent intent = getIntent();
         appDb = Utils.getAppDb(intent);
-        if (intent.hasExtra(TABLE))
+        params = new Helper(this).getParams(appDb);
+        if (intent.hasExtra(Constants.TABLE))
         {
-            String table = intent.getStringExtra(TABLE);
+            String table = intent.getStringExtra(Constants.TABLE);
             setTitle(table);
             query = new Query(0, null, "select * from " + table);
         }
-        else if (intent.hasExtra(QUERY))
+        else if (intent.hasExtra(Constants.QUERY))
         {
-            query = (Query) intent.getSerializableExtra(QUERY);
+            query = (Query) intent.getSerializableExtra(Constants.QUERY);
             setTitle(query.getName());
         }
     }
@@ -61,11 +61,12 @@ public class Table extends AsyncActivity implements Width.Listener
         View main = getMain();
         main.setVisibility(View.GONE);
 
-        new MessageDialog(this, error)
+        new MessageDialog(this, R.string.error, error)
         {
+            @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                Table.this.finish();
+                Result.this.finish();
             }
         };
     }
@@ -75,7 +76,7 @@ public class Table extends AsyncActivity implements Width.Listener
         List<String> headerCells = rows.remove(0);
         width = new Width(headerCells.size());
 
-        TableAdapter adapter = new TableAdapter(this, rows, width);
+        ResultAdapter adapter = new ResultAdapter(this, rows, width);
         list = Utils.findView(this, R.id.table);
         list.setAdapter(adapter);
 
@@ -95,11 +96,16 @@ public class Table extends AsyncActivity implements Width.Listener
     }
 
     @Override
+    public void onItemClick(AdapterView parent, View view, int position, long id)
+    {
+    }
+
+    @Override
     public void inBackground()
     {
         try
         {
-            rows = new DB(this, appDb).select(query.getQuery(), true, true, query.getBindArray());
+            rows = new DB(this, appDb, params).select(query.getQuery(), true, true, query.getBindArray());
         }
         catch (Exception e)
         {

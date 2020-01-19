@@ -20,12 +20,19 @@ public class DB
     private AppDb appDb;
     private Context context;
     private ThisApp thisApp;
+    private Map<String, String> params = Collections.EMPTY_MAP;
 
     public DB(Context context, AppDb appDb)
     {
         this.appDb = appDb;
         this.context = context;
         this.thisApp = new ThisApp(context.getPackageName());
+    }
+    
+    public DB(Context context, AppDb appDb, Map<String, String> params)
+    {
+        this(context, appDb);
+        this.params = params;
     }
     
     private <T> T run(Call<T> call, boolean read)
@@ -195,6 +202,11 @@ public class DB
     {
         try
         {
+            if (params.containsKey(Constants.CHARSET))
+            {
+                String charset = params.get(Constants.CHARSET);
+                return new String(cursor.getBlob(i), charset);
+            }
             return cursor.getString(i);
         }
         catch (Exception e)

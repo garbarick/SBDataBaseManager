@@ -7,12 +7,13 @@ import android.widget.RemoteViewsService.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.db.*;
-import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.param.*;
+import ru.net.serbis.dbmanager.query.*;
 
 public class Provider implements RemoteViewsFactory
 {
-    private List<KeyValue> rows = new ArrayList<KeyValue>();
+    private List<Param> rows = new ArrayList<Param>();
     private Context context;
     private int id;
 
@@ -29,7 +30,9 @@ public class Provider implements RemoteViewsFactory
         {
             Helper helper = new Helper(context);
             AppDbQuery query = helper.getQuery(id);
-            List<List<String>> table = new DB(context, query.getAppDb()).select(query.getQuery().getQuery(), true, false);
+            List<List<String>> table = 
+                new DB(context, query.getAppDb(), helper.getParams(query.getAppDb()))
+                    .select(query.getQuery().getQuery(), true, false);
 
             List<String> keys = table.get(0);
             List<String> values = table.size() > 1 ? table.get(1) : null;
@@ -38,13 +41,13 @@ public class Provider implements RemoteViewsFactory
             for (String key : keys)
             {
                 String value = values != null ? values.get(i++) : "";
-                rows.add(new KeyValue(key, value));
+                rows.add(new Param(key, value));
             }
         }
         catch (Exception e)
         {
             Log.info(this, e);
-            rows.add(new KeyValue(context.getResources().getString(R.string.error), e.getMessage()));
+            rows.add(new Param(context, R.string.error, e.getMessage()));
         }
     }
 
@@ -64,9 +67,9 @@ public class Provider implements RemoteViewsFactory
     public RemoteViews getViewAt(int position)
     {
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.table_row);
-        KeyValue row = rows.get(position);
+        Param row = rows.get(position);
 
-        views.setTextViewText(R.id.key, row.getKey());
+        views.setTextViewText(R.id.key, row.getName());
         views.setTextViewText(R.id.value, row.getValue());
 
         return views;

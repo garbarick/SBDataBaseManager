@@ -41,6 +41,27 @@
 		android:gravity="top|left"/>
 
 	<LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/save"
+            android:layout_weight="1"
+            android:id="@+id/save"/>
+
+        <Button
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/execute"
+            android:layout_weight="1"
+            android:id="@+id/execute"/>
+
+	</LinearLayout>
+
+    <LinearLayout
 		android:layout_height="wrap_content"
 		android:layout_width="match_parent"
 		android:orientation="horizontal">
@@ -48,16 +69,9 @@
 		<Button
 			android:layout_height="wrap_content"
 			android:layout_width="wrap_content"
-			android:text="@string/save"
+			android:text="@string/info"
 			android:layout_weight="1"
-			android:id="@+id/save"/>
-
-		<Button
-			android:layout_height="wrap_content"
-			android:layout_width="wrap_content"
-			android:text="@string/execute"
-			android:layout_weight="1"
-			android:id="@+id/execute"/>
+			android:id="@+id/info"/>
 
 		<Button
 			android:layout_height="wrap_content"

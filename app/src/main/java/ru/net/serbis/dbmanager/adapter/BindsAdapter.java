@@ -5,17 +5,17 @@ import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
+import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.util.*;
-import ru.net.serbis.dbmanager.widget.*;
 
-public class BindsAdapter extends ArrayAdapter<KeyValue> implements View.OnFocusChangeListener
+public class BindsAdapter extends ArrayAdapter<Param> implements View.OnFocusChangeListener
 {
     public BindsAdapter(Context context, List<String> names)
     {
         super(context, android.R.layout.simple_list_item_1);
         for (String name : names)
         {
-            add(new KeyValue(name, ""));
+            add(new Param(name, ""));
         }
     }
     
@@ -27,9 +27,9 @@ public class BindsAdapter extends ArrayAdapter<KeyValue> implements View.OnFocus
             view = LayoutInflater.from(getContext()).inflate(R.layout.bind, null);
         }
 
-        KeyValue item = getItem(position);
+        Param item = getItem(position);
         TextView name = Utils.findView(view, R.id.name);
-        name.setText(item.getKey());
+        name.setText(item.getName());
         
         EditText value = Utils.findView(view, R.id.value);
         value.setText(item.getValue());

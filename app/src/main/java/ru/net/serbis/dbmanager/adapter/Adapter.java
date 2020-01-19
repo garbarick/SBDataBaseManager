@@ -8,22 +8,23 @@ import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.util.*;
 
-public abstract class Adapter <T> extends ArrayAdapter<T>
+public abstract class Adapter<T> extends ArrayAdapter<T>
 {
     protected int rowLayout;
     
-    public Adapter(Context context, int layout, int rowLayout, List<T> objects)
+    public Adapter(Context context, int layout, int rowLayout, Collection<T> objects)
     {
-        super(context, layout, objects);
+        super(context, layout);
+        addAll(objects);
         this.rowLayout = rowLayout;
     }
     
-    public Adapter(Context context, int rowLayout, List<T> objects)
+    public Adapter(Context context, int rowLayout, Collection<T> objects)
     {
         this(context, R.layout.main, rowLayout, objects);
     }
     
-    public Adapter(Context context, List<T> objects)
+    public Adapter(Context context, Collection<T> objects)
     {
         this(context, R.layout.row, objects);
     }
@@ -40,8 +41,15 @@ public abstract class Adapter <T> extends ArrayAdapter<T>
         return view;
     }
     
-    protected abstract Drawable getIcon(int position);
-    protected abstract String getLabel(int position);
+    protected Drawable getIcon(int position)
+    {
+        return null;
+    }
+    
+    protected String getLabel(int position)
+    {
+        return null;
+    }
     
     protected ImageView setIcon(View view, int position)
     {

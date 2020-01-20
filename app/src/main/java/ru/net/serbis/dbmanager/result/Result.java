@@ -61,7 +61,7 @@ public class Result extends AsyncActivity implements Width.Listener
         View main = getMain();
         main.setVisibility(View.GONE);
 
-        new MessageDialog(this, R.string.error, error)
+        new AlertMessage(this, error)
         {
             @Override
             public void onClick(DialogInterface dialog, int which)

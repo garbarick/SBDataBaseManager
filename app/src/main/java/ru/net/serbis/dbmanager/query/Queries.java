@@ -98,9 +98,7 @@ public class Queries extends Folder
         {
             case R.id.editQuery:
             case R.id.deleteQuery:
-                {
-                    onMainListContext(item);
-                }
+                onMainListContext(item);
                 return true;
 
             default:

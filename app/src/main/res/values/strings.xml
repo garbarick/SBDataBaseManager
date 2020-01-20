@@ -28,4 +28,8 @@
     <string name="defaultValue">Default</string>
 
     <string name="queryInfo">Bind parameter: #bind_name#</string>
+
+    <string name="view">View</string>
+    <string name="structure">Structure</string>
+
 </resources>

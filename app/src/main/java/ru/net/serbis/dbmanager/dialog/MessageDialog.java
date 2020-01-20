@@ -6,23 +6,33 @@ import ru.net.serbis.dbmanager.*;
 
 public class MessageDialog extends AlertDialog.Builder implements DialogInterface.OnClickListener
 {
-    public MessageDialog(Context context, int title, String message)
+    public MessageDialog(Context context, String title, String message, int icon)
     {
         super(context);
-        setTitle(context.getResources().getString(title))
+        setTitle(title)
             .setMessage(message)
-            .setIcon(android.R.drawable.ic_dialog_alert)
+            .setIcon(icon)
             .setCancelable(false)
             .setPositiveButton(android.R.string.ok, this)
             .show();
     }
     
-    public MessageDialog(Context context, int title, int message)
+    public MessageDialog(Context context, int title, String message, int icon)
+    {
+        this(
+            context,
+            context.getResources().getString(title),
+            message,
+            icon);
+    }
+    
+    public MessageDialog(Context context, int title, int message, int icon)
     {
         this(
             context,
             title,
-            context.getResources().getString(message));
+            context.getResources().getString(message),
+            icon);
     }
     
     @Override

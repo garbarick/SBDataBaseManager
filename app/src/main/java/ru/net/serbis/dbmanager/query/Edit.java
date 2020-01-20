@@ -92,6 +92,6 @@ public class Edit extends Activity implements View.OnClickListener
     
     private void infoAction()
     {
-        new MessageDialog(this, R.string.info, R.string.queryInfo);
+        new InfoMessage(this, R.string.info, R.string.queryInfo);
     }
 }

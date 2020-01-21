@@ -1,11 +1,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
     <item
         android:id="@+id/editQuery"
         android:title="@string/editQuery"/>
-    
     <item
         android:id="@+id/deleteQuery"
         android:title="@string/deleteQuery"/>
-    
 </menu>

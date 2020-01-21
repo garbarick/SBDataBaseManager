@@ -21,6 +21,7 @@ public class Row extends LinearLayout
     private int color = R.color.row;
     private int colorFirstCell = R.color.rowFirstCell;
     private int colorOtherCell = R.color.rowOtherCell;
+    private int colorSelected = R.color.rowSelected;
 
     private boolean columnsInit = false;
 
@@ -47,6 +48,21 @@ public class Row extends LinearLayout
         this.cells = cells;
     }
 
+    public List<String> getCells()
+    {
+        return cells;
+    }
+    
+    public List<String> getEditCells()
+    {
+        return getEditCells(cells);
+    }
+    
+    public static List<String> getEditCells(List<String> cells)
+    {
+        return new ArrayList<String>(cells.subList(1, cells.size()));
+    }
+
     public void setWidth(Width width)
     {
         this.width = width;
@@ -66,12 +82,18 @@ public class Row extends LinearLayout
 
     public void update()
     {
+        update(false);
+    }
+    
+    public void update(boolean selected)
+    {
         if (!columnsInit)
         {
             createContent();
             columnsInit = true;
         }
         updateWidth(cells);
+        updateBackground(selected);
         setWidths();
     }
     
@@ -105,7 +127,10 @@ public class Row extends LinearLayout
         for (int i = 0; i < cells.size(); i ++)
         {
             TextView text = new TextView(getContext());
-            text.setBackgroundResource(i == 0 ? colorFirstCell : colorOtherCell);
+            if (i == 0)
+            {
+                setBackground(text, i, false);
+            }
             text.setId(i + SHIFT);
             addView(text);
         }
@@ -133,5 +158,21 @@ public class Row extends LinearLayout
         view.setText(text);
         view.measure(0, 0);
         return view.getMeasuredWidth();
+    }
+    
+    public void updateBackground(boolean selected)
+    {
+        for (int i = 1; i < cells.size(); i++)
+        {
+            TextView text = Utils.findView(this, i + SHIFT);
+            setBackground(text, i, selected);
+        }
+    }
+
+    private void setBackground(TextView view, int column, boolean selected)
+    {
+        view.setBackgroundResource(
+            column == 0 ? colorFirstCell :
+            (selected ? colorSelected : colorOtherCell));
     }
 }

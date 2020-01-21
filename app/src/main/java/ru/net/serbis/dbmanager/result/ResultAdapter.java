@@ -9,7 +9,8 @@ import ru.net.serbis.dbmanager.*;
 public class ResultAdapter extends ArrayAdapter<List<String>>
 {
     private Width width;
-    
+    private int selected = -1;
+
     public ResultAdapter(Activity context, List<List<String>> objects, Width width)
     {
         super(context, R.layout.content, objects);
@@ -30,7 +31,12 @@ public class ResultAdapter extends ArrayAdapter<List<String>>
             row = (Row) view;
         }
         row.setCells(getItem(position));
-        row.update();
+        row.update(position == selected);
         return row;
+    }
+
+    public void select(int selected)
+    {
+        this.selected = selected;
     }
 }

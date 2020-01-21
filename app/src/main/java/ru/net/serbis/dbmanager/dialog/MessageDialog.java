@@ -16,7 +16,7 @@ public class MessageDialog extends AlertDialog.Builder implements DialogInterfac
             .setPositiveButton(android.R.string.ok, this)
             .show();
     }
-    
+
     public MessageDialog(Context context, int title, String message, int icon)
     {
         this(
@@ -25,7 +25,7 @@ public class MessageDialog extends AlertDialog.Builder implements DialogInterfac
             message,
             icon);
     }
-    
+
     public MessageDialog(Context context, int title, int message, int icon)
     {
         this(
@@ -34,7 +34,16 @@ public class MessageDialog extends AlertDialog.Builder implements DialogInterfac
             context.getResources().getString(message),
             icon);
     }
-    
+
+    public MessageDialog(Context context, String title, int message, int icon)
+    {
+        this(
+            context,
+            title,
+            context.getResources().getString(message),
+            icon);
+    }
+
     @Override
     public void onClick(DialogInterface dialog, int which)
     {

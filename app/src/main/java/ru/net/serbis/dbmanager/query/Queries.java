@@ -6,7 +6,9 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.db.*;
+import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.folder.*;
+import ru.net.serbis.dbmanager.result.*;
 
 public class Queries extends Folder
 {
@@ -113,20 +115,35 @@ public class Queries extends Folder
         switch (item.getItemId())
         {
             case R.id.editQuery:
-                {
-                    Intent intent = new Intent(Queries.this, Edit.class);
-                    intent.putExtra(Constants.QUERY, query);
-                    intent.putExtra(Constants.APP, appDb.getApp());
-                    intent.putExtra(Constants.DB, appDb.getDb());
-                    startActivityForResult(intent, Constants.EDIT_REQUEST);
-                }
+                editQuery(query);
                 break;
 
             case R.id.deleteQuery:
-                helper.deleteQuery(query);
-                startTask();
+                deleteQuery(query);
                 break;
         }
+    }
+    
+    private void editQuery(Query query)
+    {
+        Intent intent = new Intent(Queries.this, Edit.class);
+        intent.putExtra(Constants.QUERY, query);
+        intent.putExtra(Constants.APP, appDb.getApp());
+        intent.putExtra(Constants.DB, appDb.getDb());
+        startActivityForResult(intent, Constants.EDIT_REQUEST);
+    }
+
+    private void deleteQuery(final Query query)
+    {
+        new QuestionDialog(this, R.string.areYouSure)
+        {
+            @Override
+            public void onClick(DialogInterface dialog, int which)
+            {
+                helper.deleteQuery(query);
+                startTask();
+            }
+        };
     }
 
     @Override

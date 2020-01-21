@@ -13,5 +13,6 @@
     <color name="row">#505050</color>
     <color name="rowFirstCell">#505050</color>
     <color name="rowOtherCell">#303030</color>
+    <color name="rowSelected">#404040</color>
     
 </resources>

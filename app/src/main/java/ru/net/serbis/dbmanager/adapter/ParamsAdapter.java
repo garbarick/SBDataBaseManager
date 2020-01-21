@@ -8,17 +8,28 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.util.*;
 
-public class BindsAdapter extends ArrayAdapter<Param> implements View.OnFocusChangeListener
+public class ParamsAdapter extends ArrayAdapter<Param> implements View.OnFocusChangeListener
 {
-    public BindsAdapter(Context context, List<String> names)
+    public ParamsAdapter(Context context, List<String> names, List<String> values)
     {
         super(context, android.R.layout.simple_list_item_1);
-        for (String name : names)
+        initParams(names, values);
+    }
+
+    protected void initParams(List<String> names, List<String> values)
+    {
+        for (int i = 0; i < names.size(); i++)
         {
-            add(new Param(name, ""));
+            String name = names.get(i);
+            String value = "";
+            if (values != null && values.size() > i)
+            {
+                value = values.get(i);
+            }
+            add(new Param(name, value));
         }
     }
-    
+
     @Override
     public View getView(int position, View view, ViewGroup parent)
     {

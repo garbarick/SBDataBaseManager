@@ -28,8 +28,17 @@
     <string name="defaultValue">Default</string>
 
     <string name="queryInfo">Bind parameter: #bind_name#</string>
+    <string name="row">Row</string>
 
     <string name="view">View</string>
     <string name="structure">Structure</string>
+    
+    <string name="viewRow">View Row</string>
+    <string name="editRow">Edit Row</string>
+    <string name="deleteRow">Delete Row</string>
+    <string name="addRow">Add Row</string>
+
+    <string name="notImplementedYet">Not Implemented Yet</string>
+    <string name="areYouSure">Are You Sure ?</string>
 
 </resources>

@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/viewRow"
+        android:title="@string/viewRow"/>
+    <item
+        android:id="@+id/editRow"
+        android:title="@string/editRow"/>
+    <item
+        android:id="@+id/deleteRow"
+        android:title="@string/deleteRow"/>
+</menu>

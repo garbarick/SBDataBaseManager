@@ -13,4 +13,13 @@ public class AlertMessage extends MessageDialog
             message,
             android.R.drawable.ic_dialog_alert);
     }
+
+    public AlertMessage(Context context, int message)
+    {
+        super(
+            context,
+            R.string.error,
+            message,
+            android.R.drawable.ic_dialog_alert);
+    }
 }

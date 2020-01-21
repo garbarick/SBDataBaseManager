@@ -1,5 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/newQuery"
-        android:title="@string/newQuery"/>
+        android:id="@+id/addRow"
+        android:title="@string/addRow"/>
 </menu>

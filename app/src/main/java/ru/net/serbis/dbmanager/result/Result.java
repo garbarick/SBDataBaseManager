@@ -247,7 +247,7 @@ public class Result extends AsyncActivity implements Width.Listener
     {
         final List<String> names = header.getEditCells();
         final List<String> oldValues = Row.getEditCells(rows.get(position));
-        new ParamsDialog(
+        new FieldsDialog(
             this,
             getRowName(position),
             names,
@@ -281,7 +281,7 @@ public class Result extends AsyncActivity implements Width.Listener
     private void addRow()
     {
         final List<String> names = header.getEditCells();
-        new ParamsDialog(
+        new FieldsDialog(
             this,
             getResources().getString(R.string.addRow),
             names,

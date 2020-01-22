@@ -4,7 +4,7 @@ import android.content.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.util.*;
 
-public abstract class BindsDialog extends ParamsDialog
+public abstract class BindsDialog extends FieldsDialog
 {
     private Context context;
     private boolean closeParent;

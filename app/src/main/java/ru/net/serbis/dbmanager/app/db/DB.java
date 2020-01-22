@@ -7,6 +7,7 @@ import java.io.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.*;
+import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.sh.*;
 
 public class DB
@@ -20,7 +21,8 @@ public class DB
     private AppDb appDb;
     private Context context;
     private ThisApp thisApp;
-    private Map<String, String> params = Collections.EMPTY_MAP;
+    private ParamMap params = new ParamMap();
+    private boolean readOnly;
 
     public DB(Context context, AppDb appDb)
     {
@@ -29,12 +31,17 @@ public class DB
         this.thisApp = new ThisApp(context.getPackageName());
     }
     
-    public DB(Context context, AppDb appDb, Map<String, String> params)
+    public DB(Context context, AppDb appDb, ParamMap params)
     {
         this(context, appDb);
         this.params = params;
     }
-    
+
+    public boolean isReadOnly()
+    {
+        return readOnly;
+    }
+
     private <T> T run(Call<T> call, boolean read)
     {
         try
@@ -49,6 +56,7 @@ public class DB
             }
             catch (SQLiteDatabaseLockedException lockError)
             {
+                readOnly = true;
                 return runByCopy(call, read);
             }
         }

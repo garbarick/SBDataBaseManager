@@ -40,5 +40,7 @@
 
     <string name="notImplementedYet">Not Implemented Yet</string>
     <string name="areYouSure">Are You Sure ?</string>
+    <string name="pleaseDefineColumns">Please Define Columns</string>
+    <string name="readOnly">Read Only</string>
 
 </resources>

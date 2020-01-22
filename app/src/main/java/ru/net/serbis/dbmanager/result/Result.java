@@ -6,11 +6,12 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.db.*;
+import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.dialog.*;
+import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.task.*;
 import ru.net.serbis.dbmanager.util.*;
-import ru.net.serbis.dbmanager.db.*;
 
 public class Result extends AsyncActivity implements Width.Listener
 {
@@ -22,8 +23,12 @@ public class Result extends AsyncActivity implements Width.Listener
     private Row header;
     private ListView list;
     private String error;
-    private Map<String, String> params;
+    private ParamMap params;
     private boolean edit;
+    private boolean switchEdit;
+    
+    private Menu optionsMenu;
+    private boolean optionsInit;
 
     @Override
     protected void initCreate()
@@ -54,6 +59,15 @@ public class Result extends AsyncActivity implements Width.Listener
         {
             showError();
             return;
+        }
+        if (switchEdit)
+        {
+            hideMenuItem(optionsMenu, R.id.addRow);
+            setTitle(getTitle() + " (" + getResources().getString(R.string.readOnly) + ")");
+        }
+        if (edit && !optionsInit)
+        {
+            initOptionMenu();
         }
         initMainContent();
     }
@@ -112,7 +126,13 @@ public class Result extends AsyncActivity implements Width.Listener
     {
         try
         {
-            rows = new DB(this, appDb, params).select(query.getQuery(), true, true, query.getBindArray());
+            DB db = new DB(this, appDb, params);
+            rows = db.select(query.getQuery(), true, true, query.getBindArray());
+            if (edit && db.isReadOnly())
+            {
+                edit = false;
+                switchEdit = true;
+            }
         }
         catch (Exception e)
         {
@@ -143,8 +163,8 @@ public class Result extends AsyncActivity implements Width.Listener
             inflater.inflate(R.menu.row, menu);
             if (!edit)
             {
-                menu.findItem(R.id.editRow).setVisible(false);
-                menu.findItem(R.id.deleteRow).setVisible(false);
+                hideMenuItem(menu, R.id.editRow);
+                hideMenuItem(menu, R.id.deleteRow);
             }
         }
     }
@@ -152,6 +172,19 @@ public class Result extends AsyncActivity implements Width.Listener
     private String getRowName(int position)
     {
         return getResources().getString(R.string.row) + " " + (position + 1);
+    }
+    
+    private void hideMenuItem(Menu menu, int id)
+    {
+        if (menu == null)
+        {
+            return;
+        }
+        MenuItem item = menu.findItem(id);
+        if (item != null)
+        {
+            item.setVisible(false);
+        }
     }
 
     @Override
@@ -177,13 +210,23 @@ public class Result extends AsyncActivity implements Width.Listener
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
-        if (!edit)
+        optionsMenu = menu;
+        if (edit && !progress)
         {
-            return false;
+            initOptionMenu();
+        }
+        return true;
+    }
+    
+    private void initOptionMenu()
+    {
+        if (optionsMenu == null)
+        {
+            return;
         }
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.result, menu);
-        return true;
+        inflater.inflate(R.menu.result, optionsMenu);
+        optionsInit = true;
     }
 
     @Override
@@ -202,38 +245,42 @@ public class Result extends AsyncActivity implements Width.Listener
 
     private void editRow(int position, boolean readOnly)
     {
-        List<String> names = header.getEditCells();
-        List<String> values = Row.getEditCells(rows.get(position));
+        final List<String> names = header.getEditCells();
+        final List<String> oldValues = Row.getEditCells(rows.get(position));
         new ParamsDialog(
             this,
             getRowName(position),
             names,
-            values,
+            oldValues,
             readOnly)
         {
             @Override
-            protected void ready(List<String> values)
+            protected void ready(List<String> newValues)
             {
-                new AlertMessage(Result.this, R.string.notImplementedYet);
+                Query query = new QueryGenerator().generateUpdate(getTitle().toString(), names, oldValues, newValues);
+                executeQuery(query);
             }
         };
     }
     
-    private void deleteRow(int position)
+    private void deleteRow(final int position)
     {
         new QuestionDialog(this, R.string.areYouSure)
         {
             @Override
             public void onClick(DialogInterface dialog, int which)
             {
-                new AlertMessage(Result.this, R.string.notImplementedYet);
+                List<String> names = header.getEditCells();
+                List<String> values = Row.getEditCells(rows.get(position));
+                Query query = new QueryGenerator().generateDelete(getTitle().toString(), names, values);
+                executeQuery(query);
             }
         };
     }
     
     private void addRow()
     {
-        List<String> names = header.getEditCells();
+        final List<String> names = header.getEditCells();
         new ParamsDialog(
             this,
             getResources().getString(R.string.addRow),
@@ -244,8 +291,28 @@ public class Result extends AsyncActivity implements Width.Listener
             @Override
             protected void ready(List<String> values)
             {
-                new AlertMessage(Result.this, R.string.notImplementedYet);
+                Query query = new QueryGenerator().generateInsert(getTitle().toString(), names, values);
+                executeQuery(query);
             }
         };
+    }
+
+    private void executeQuery(Query query)
+    {
+        if (query == null)
+        {
+            new AlertMessage(Result.this, R.string.pleaseDefineColumns);
+            return;
+        }
+        try
+        {
+            new DB(this, appDb, params).select(query.getQuery(), false, false, query.getBindArray());
+            startTask();
+        }
+        catch (Exception e)
+        {
+            Log.info(this, e);
+            new AlertMessage(this, e.getMessage());
+        }
     }
 }

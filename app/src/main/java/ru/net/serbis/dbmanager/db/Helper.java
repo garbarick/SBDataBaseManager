@@ -350,12 +350,12 @@ public class Helper extends SQLiteOpenHelper
         }
     }
 
-    public Map<String, String> getParams(final AppDb appDb)
+    public ParamMap getParams(final AppDb appDb)
     {
         return runInDB(
-            new Call<Map<String, String>>()
+            new Call<ParamMap>()
             {
-                public Map<String, String> call(SQLiteDatabase db)
+                public ParamMap call(SQLiteDatabase db)
                 {
                     return getParams(db, appDb);
                 }
@@ -364,9 +364,9 @@ public class Helper extends SQLiteOpenHelper
         );
     }
 
-    public Map<String, String> getParams(SQLiteDatabase db, AppDb appDb)
+    public ParamMap getParams(SQLiteDatabase db, AppDb appDb)
     {
-        Map<String, String> result = new HashMap<String, String>();
+        ParamMap result = new ParamMap();
         try
         {
             long dbId = getDbId(db, appDb, false);

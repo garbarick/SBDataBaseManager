@@ -9,6 +9,8 @@ import ru.net.serbis.dbmanager.util.*;
 
 public abstract class AsyncActivity extends Activity implements Async, AdapterView.OnItemClickListener
 {
+    protected boolean progress = true;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -39,6 +41,7 @@ public abstract class AsyncActivity extends Activity implements Async, AdapterVi
     @Override
     public void postExecute()
     {
+        progress = false;
         findViewById(R.id.progress).setVisibility(View.GONE);
         View main = getMain();
         main.setVisibility(View.VISIBLE);

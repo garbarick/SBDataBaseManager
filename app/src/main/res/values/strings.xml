@@ -32,15 +32,22 @@
 
     <string name="view">View</string>
     <string name="structure">Structure</string>
-    
+
     <string name="viewRow">View Row</string>
     <string name="editRow">Edit Row</string>
     <string name="deleteRow">Delete Row</string>
     <string name="addRow">Add Row</string>
+    <string name="exportJSON">Export to JSON</string>
+    <string name="importJSON">Import from JSON</string>
 
     <string name="notImplementedYet">Not Implemented Yet</string>
     <string name="areYouSure">Are You Sure ?</string>
     <string name="pleaseDefineColumns">Please Define Columns</string>
     <string name="readOnly">Read Only</string>
+    <string name="selectFile">Select File</string>
+    <string name="successfully">Successfully</string>
+
+    <string name="json">JSON</string>
+    <string name="mappingColumns">Mapping Columns</string>
 
 </resources>

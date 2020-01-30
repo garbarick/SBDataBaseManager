@@ -7,65 +7,44 @@ import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.util.*;
 
-public class FieldsAdapter
+public class FieldsAdapter extends ParamsAdapter
 {
-    protected Context context;
-    protected View view;
-    protected LinearLayout fields;
+    protected List<String> values;
     protected boolean readOnly;
 
     public FieldsAdapter(Context context, List<String> names, List<String> values, boolean readOnly)
     {
-        this.context = context;
+        super(context, R.layout.fields, R.layout.field, names);
+        this.values = values;
         this.readOnly = readOnly;
-        initView();
-        initParams(names, values);
     }
 
-    public View getView()
+    @Override
+    protected View createChild(String name, int position)
     {
-        return view;
-    }
-
-    protected void initView()
-    {
-        view = LayoutInflater.from(context).inflate(R.layout.fields, null);
-        fields = Utils.findView(view, R.id.fields);
-    }
-
-    protected void initParams(List<String> names, List<String> values)
-    {
-        for (int i = 0; i < names.size(); i++)
-        {
-            String name = names.get(i);
-            String value = "";
-            if (values != null && values.size() > i)
-            {
-                value = values.get(i);
-            }
-            fields.addView(createFieldView(name, value));
-        }
-    }
-    
-    protected View createFieldView(String name, String value)
-    {
-        View field = LayoutInflater.from(context).inflate(R.layout.field, null);
+        View field = super.createChild(name, position);
         
         TextView text = Utils.findView(field, R.id.name);
         text.setText(name);
         
+        String value = "";
+        if (values != null && values.size() > position)
+        {
+            value = values.get(position);
+        }
         EditText edit = Utils.findView(field, R.id.value);
         edit.setText(value);
-        
+
         if (readOnly)
         {
             edit.setKeyListener(null);
             edit.setTextIsSelectable(true);
         }
-        
+
         return field;
     }
-
+    
+    @Override
     public List<String> getValues()
     {
         List<String> result = new ArrayList<String>();

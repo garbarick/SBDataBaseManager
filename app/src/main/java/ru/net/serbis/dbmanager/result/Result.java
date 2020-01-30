@@ -8,6 +8,7 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.dialog.*;
+import ru.net.serbis.dbmanager.json.*;
 import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.task.*;
@@ -62,10 +63,9 @@ public class Result extends AsyncActivity implements Width.Listener
         }
         if (switchEdit)
         {
-            hideMenuItem(optionsMenu, R.id.addRow);
             setTitle(getTitle() + " (" + getResources().getString(R.string.readOnly) + ")");
         }
-        if (edit && !optionsInit)
+        if (!optionsInit)
         {
             initOptionMenu();
         }
@@ -211,7 +211,7 @@ public class Result extends AsyncActivity implements Width.Listener
     public boolean onCreateOptionsMenu(Menu menu)
     {
         optionsMenu = menu;
-        if (edit && !progress)
+        if (!progress)
         {
             initOptionMenu();
         }
@@ -227,6 +227,12 @@ public class Result extends AsyncActivity implements Width.Listener
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.result, optionsMenu);
         optionsInit = true;
+        if (edit)
+        {
+            return;
+        }
+        hideMenuItem(optionsMenu, R.id.addRow);
+        hideMenuItem(optionsMenu, R.id.importJSON);
     }
 
     @Override
@@ -237,7 +243,12 @@ public class Result extends AsyncActivity implements Width.Listener
             case R.id.addRow:
                 addRow();
                 return true;
-
+            case R.id.importJSON:
+                importJSON();
+                return true;
+            case R.id.exportJSON:
+                exportJSON();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -306,7 +317,7 @@ public class Result extends AsyncActivity implements Width.Listener
         }
         try
         {
-            new DB(this, appDb, params).select(query.getQuery(), false, false, query.getBindArray());
+            new DB(this, appDb, params).execute(query.getQuery(), query.getBindArray());
             startTask();
         }
         catch (Exception e)
@@ -314,5 +325,30 @@ public class Result extends AsyncActivity implements Width.Listener
             Log.info(this, e);
             new AlertMessage(this, e.getMessage());
         }
+    }
+
+    private void importJSON()
+    {
+        new ImportJSON(
+            this,
+            new DB(this, appDb, params),
+            getTitle().toString(),
+            header.getEditCells())
+        {
+            @Override
+            protected void onFinish()
+            {
+                startTask();
+            }  
+        }.executeDialog();
+    }
+
+    private void exportJSON()
+    {
+        new ExportJSON(
+            this,
+            getTitle().toString(),
+            header.getCells(),
+            rows).executeDialog();
     }
 }

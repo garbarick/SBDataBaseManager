@@ -6,13 +6,11 @@ import ru.net.serbis.dbmanager.util.*;
 
 public abstract class BindsDialog extends FieldsDialog
 {
-    private Context context;
     private boolean closeParent;
 
     public BindsDialog(Context context, String name, List<String> names, boolean closeParent)
     {
         super(context, name, names, null, false);
-        this.context = context;
         this.closeParent = closeParent;
     }
    

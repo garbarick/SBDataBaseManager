@@ -10,7 +10,7 @@ import ru.net.serbis.dbmanager.adapter.*;
 import ru.net.serbis.dbmanager.adapter.Adapter;
 import ru.net.serbis.dbmanager.util.*;
 
-public class ParamAdapter extends Adapter<Param>
+public class ParamAdapter extends IconAdapter<Param>
 {
     public ParamAdapter(Context context, List<? extends Param> params)
     {

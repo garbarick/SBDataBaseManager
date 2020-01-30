@@ -2,4 +2,10 @@
     <item
         android:id="@+id/addRow"
         android:title="@string/addRow"/>
+    <item
+        android:id="@+id/exportJSON"
+        android:title="@string/exportJSON"/>
+    <item
+        android:id="@+id/importJSON"
+        android:title="@string/importJSON"/>
 </menu>

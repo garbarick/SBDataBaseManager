@@ -2,8 +2,10 @@ package ru.net.serbis.dbmanager.util;
 
 import android.app.*;
 import android.content.*;
+import android.os.*;
 import android.view.*;
 import android.widget.*;
+import java.io.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.*;
 import ru.net.serbis.dbmanager.app.db.*;
@@ -43,5 +45,32 @@ public class Utils
     public static boolean isEmpty(String str)
     {
         return str == null || str.length() == 0;
+    }
+
+    public static boolean isNotEmpty(String str)
+    {
+        return str != null && str.length() > 0;
+    }
+
+    public static void close(Closeable o)
+    {
+        try
+        {
+            if (o != null)
+            {
+                o.close();
+            }
+        }
+        catch (Exception e)
+        {
+        }
+    }
+    
+    public static File getToolFolder()
+    {
+        File dir = Environment.getExternalStorageDirectory();
+        File appDir = new File(dir, "SBDataBaseManager");
+        appDir.mkdirs();
+        return appDir;
     }
 }

@@ -12,11 +12,6 @@ import ru.net.serbis.dbmanager.sh.*;
 
 public class DB
 {
-    private interface Call<T>
-    {
-        T call(SQLiteDatabase db);
-    }
-
     private Shell sh = new Shell();
     private AppDb appDb;
     private Context context;
@@ -42,7 +37,7 @@ public class DB
         return readOnly;
     }
 
-    private <T> T run(Call<T> call, boolean read)
+    public <T> T run(DbCall<T> call, boolean read)
     {
         try
         {
@@ -62,13 +57,13 @@ public class DB
         }
     }
     
-    private <T> T runInDb(Call<T> call, boolean read)
+    private <T> T runInDb(DbCall<T> call, boolean read)
     {
         File file = appDb.getDBFile();
         return runInDB(file, call, read);
     }
 
-    private <T> T runByChmod(Call<T> call, boolean read)
+    private <T> T runByChmod(DbCall<T> call, boolean read)
     {
         File file = appDb.getDBFile();
         File journal = appDb.getJournalFile();
@@ -88,7 +83,7 @@ public class DB
         }
     }
 
-    private <T> T runByCopy(Call<T> call, boolean read)
+    private <T> T runByCopy(DbCall<T> call, boolean read)
     {
         File file = appDb.getDBFile();
         File journal = appDb.getJournalFile();
@@ -113,7 +108,7 @@ public class DB
         }
     }
     
-    private <T> T runInDB(File file, Call<T> call, boolean read)
+    private <T> T runInDB(File file, DbCall<T> call, boolean read)
     {
         SQLiteDatabase db = null;
         try
@@ -144,7 +139,7 @@ public class DB
     {
         boolean read = query.toLowerCase().startsWith("select ");
         return run(
-            new Call<List<List<String>>>()
+            new DbCall<List<List<String>>>()
             {
                 public List<List<String>> call(SQLiteDatabase db)
                 {
@@ -221,5 +216,19 @@ public class DB
         {
             return null;
         }
+    }
+    
+    public void execute(final String query, final String... args)
+    {
+        run(
+            new DbCall<Void>()
+            {
+                public Void call(SQLiteDatabase db)
+                {
+                    db.execSQL(query, args);
+                    return null;
+                }
+            }, false
+        );
     }
 }

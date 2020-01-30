@@ -5,7 +5,7 @@ import android.graphics.drawable.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.adapter.*;
 
-public class AppAdapter extends Adapter<App>
+public class AppAdapter extends IconAdapter<App>
 {
     public AppAdapter(Context context, List<App> objects)
     {

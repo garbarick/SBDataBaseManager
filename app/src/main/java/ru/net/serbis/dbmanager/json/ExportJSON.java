@@ -14,7 +14,7 @@ public class ExportJSON extends ProgressTool
     private String table;
     private List<String> header;
     private List<List<String>> rows;
-    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd_HH-mm-ss");
     private JsonWriter writer;
 
     public ExportJSON(Context context, String table, List<String> header, List<List<String>> rows)

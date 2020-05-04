@@ -9,6 +9,7 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.util.*;
 import ru.net.serbis.dbmanager.dialog.*;
+import android.text.*;
 
 public class Edit extends Activity implements View.OnClickListener
 {
@@ -16,6 +17,7 @@ public class Edit extends Activity implements View.OnClickListener
     private EditText editQuery;
     private AppDb appDp;
     private Query query;
+    private boolean edit;
     
     @Override
     public void onCreate(Bundle savedInstanceState)
@@ -36,6 +38,7 @@ public class Edit extends Activity implements View.OnClickListener
             editQuery.setText(query.getQuery());
         }
         
+        initEdit(editQuery);
         initButton(R.id.save);
         initButton(R.id.execute);
         initButton(R.id.info);
@@ -54,6 +57,30 @@ public class Edit extends Activity implements View.OnClickListener
     {
         Button button = Utils.findView(this, id);
         button.setOnClickListener(this);
+    }
+    
+    private void initEdit(EditText editText)
+    {
+        editText.addTextChangedListener(
+            new TextWatcher()
+            {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after)
+                {  
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count)
+                {
+                    edit = true;
+                }
+
+                @Override
+                public void afterTextChanged(Editable s)
+                {
+                }
+            }
+        );
     }
     
     @Override
@@ -82,6 +109,7 @@ public class Edit extends Activity implements View.OnClickListener
         Intent intent = new Intent(getIntent());
         intent.putExtra(Constants.QUERY, getQuery(query));
         setResult(RESULT_OK, intent);
+        edit = false;
         finish();
     }
 
@@ -93,5 +121,23 @@ public class Edit extends Activity implements View.OnClickListener
     private void infoAction()
     {
         new InfoMessage(this, R.string.info, R.string.queryInfo);
+    }
+
+    @Override
+    public void finish()
+    {
+        if (edit)
+        {
+            new QuestionDialog(this, R.string.areYouSure)
+            {
+                @Override
+                public void onClick(DialogInterface dialog, int which)
+                {
+                    Edit.super.finish();
+                }
+            };
+            return;
+        }
+        super.finish();
     }
 }

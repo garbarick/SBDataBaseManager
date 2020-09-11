@@ -23,7 +23,7 @@ public abstract class ParamsAdapter
         this.rowLayoutId = rowLayoutId;
         this.names = names;
     }
-    
+
     public View getView()
     {
         if (view == null)
@@ -34,12 +34,17 @@ public abstract class ParamsAdapter
         return view;
     }
 
+    protected View createView(int layoutId)
+    {
+        return LayoutInflater.from(context).inflate(layoutId, null);
+    }
+
     protected void initView()
     {
-        view = LayoutInflater.from(context).inflate(layoutId, null);
+        view = createView(layoutId);
         fields = Utils.findView(view, R.id.fields);
     }
-    
+
     protected void createChildren(List<String> names)
     {
         for (int i = 0; i < names.size(); i++)
@@ -48,11 +53,11 @@ public abstract class ParamsAdapter
             fields.addView(createChild(name, i));
         }
     }
-    
+
     protected View createChild(String name, int position)
     {
-        return LayoutInflater.from(context).inflate(rowLayoutId, null);
+        return createView(rowLayoutId);
     }
-    
+
     public abstract List<String> getValues();
 }

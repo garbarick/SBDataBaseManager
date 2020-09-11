@@ -4,8 +4,6 @@ import android.content.*;
 import android.database.*;
 import android.database.sqlite.*;
 import java.io.*;
-import java.util.*;
-import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.app.*;
 import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.sh.*;
@@ -25,7 +23,7 @@ public class DB
         this.context = context;
         this.thisApp = new ThisApp(context.getPackageName());
     }
-    
+
     public DB(Context context, AppDb appDb, ParamMap params)
     {
         this(context, appDb);
@@ -56,7 +54,7 @@ public class DB
             }
         }
     }
-    
+
     private <T> T runInDb(DbCall<T> call, boolean read)
     {
         File file = appDb.getDBFile();
@@ -107,7 +105,7 @@ public class DB
             thisApp.getDataBaseDir(appDb).delete();
         }
     }
-    
+
     private <T> T runInDB(File file, DbCall<T> call, boolean read)
     {
         SQLiteDatabase db = null;
@@ -135,89 +133,49 @@ public class DB
         }
     }
 
-    public List<List<String>> select(final String query, final boolean withColumnName, final boolean withRowNum, final String... args)
+    public DBResult select(final String query, final boolean withColumns, final boolean withRowNum, final String... args)
     {
         boolean read = query.toLowerCase().startsWith("select ");
         return run(
-            new DbCall<List<List<String>>>()
+            new DbCall<DBResult>()
             {
-                public List<List<String>> call(SQLiteDatabase db)
+                public DBResult call(SQLiteDatabase db)
                 {
-                    return selectInDB(db, query, withColumnName, withRowNum, args);
+                    return selectInDB(db, query, withColumns, withRowNum, args);
                 }
             }, read
         );
     }
-
-    private List<List<String>> selectInDB(SQLiteDatabase db, String query, boolean withColumnName, boolean withRowNum, String... args)
+    
+    public DBResult selectTable(final String table, final boolean withColumns, final boolean withTypes, final boolean withRowNum)
     {
-        List<List<String>> result = new ArrayList<List<String>>();
+        return run(
+            new DbCall<DBResult>()
+            {
+                public DBResult call(SQLiteDatabase db)
+                {
+                    DBResult result = selectInDB(db, "select * from " + table, withColumns, withRowNum);
+                    initTypes(db, result, table);
+                    return result;
+                }
+            }, true
+        );
+    }
+
+    private DBResult selectInDB(SQLiteDatabase db, String query, boolean withColumns, boolean withRowNum, String... args)
+    {
         Cursor cursor = db.rawQuery(query, args);
-        if (withColumnName)
-        {
-            result.add(getHeader(cursor, withRowNum));
-        }
-        result.addAll(getRows(cursor, withRowNum));
+        DBResult result = new DBResult();
+        result.init(context, params, cursor, withColumns, withRowNum);
         return result;
+    }
+    
+    private void initTypes(SQLiteDatabase db, DBResult result, String table)
+    {
+        Cursor cursor = db.rawQuery("PRAGMA table_info(" + table + ")", null);
+        result.initTypes(cursor);
     }
 
-    private List<String> getHeader(Cursor cursor, boolean withRowNum)
-    {
-        List<String> result = new ArrayList<String>();
-        if (withRowNum)
-        {
-            result.add(context.getResources().getString(R.string.num));
-        }
-        int count = cursor.getColumnCount();
-        for (int i = 0; i < count; i++)
-        {
-            result.add(cursor.getColumnName(i));
-        }
-        return result;
-    }
-    
-    private List<List<String>> getRows(Cursor cursor, boolean withRowNum)
-    {
-        List<List<String>> result = new ArrayList<List<String>>();
-        if (cursor.moveToFirst())
-        {
-            int y = 1;
-            int count = cursor.getColumnCount();
-            do
-            {
-                List<String> row = new ArrayList<String>();
-                if (withRowNum)
-                {
-                    row.add(String.valueOf(y++));
-                }
-                for (int i = 0; i < count; i++)
-                {
-                    row.add(getString(cursor, i));
-                }
-                result.add(row);
-            }
-            while(cursor.moveToNext());
-        }
-        return result;
-    }
-    
-    private String getString(Cursor cursor, int i)
-    {
-        try
-        {
-            if (params.containsKey(Constants.CHARSET))
-            {
-                String charset = params.get(Constants.CHARSET);
-                return new String(cursor.getBlob(i), charset);
-            }
-            return cursor.getString(i);
-        }
-        catch (Exception e)
-        {
-            return null;
-        }
-    }
-    
     public void execute(final String query, final String... args)
     {
         run(
@@ -225,7 +183,7 @@ public class DB
             {
                 public Void call(SQLiteDatabase db)
                 {
-                    db.execSQL(query, args);
+                    db.execSQL(query, new Bind().convertData(params, args));
                     return null;
                 }
             }, false

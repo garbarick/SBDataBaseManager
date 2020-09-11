@@ -34,7 +34,7 @@
         <activity
             android:name=".app.db.Tables"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:configChanges="orientation"/>
         
         <activity
             android:name=".query.Queries"
@@ -43,17 +43,17 @@
         
         <activity
             android:name=".query.Edit"
-            android:stateNotNeeded="true"/>
+            android:configChanges="orientation"/>
         
         <activity
             android:name=".result.Result"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:configChanges="orientation"/>
 
         <activity
             android:name=".param.Params"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:configChanges="orientation"/>
 
         <activity
             android:name=".widget.Config">

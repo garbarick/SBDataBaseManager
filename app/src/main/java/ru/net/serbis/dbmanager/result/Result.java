@@ -17,8 +17,9 @@ import ru.net.serbis.dbmanager.util.*;
 public class Result extends AsyncActivity implements Width.Listener
 {
     private AppDb appDb;
+    private String name;
     private Query query;
-    private List<List<String>> rows;
+    private DBResult result;
     private Width width;
 
     private Row header;
@@ -41,29 +42,28 @@ public class Result extends AsyncActivity implements Width.Listener
         params = new Helper(this).getParams(appDb);
         if (intent.hasExtra(Constants.TABLE))
         {
-            String table = intent.getStringExtra(Constants.TABLE);
-            setTitle(table);
-            query = new Query(0, null, "select * from " + table);
+            name = intent.getStringExtra(Constants.TABLE);
             edit = true;
         }
         else if (intent.hasExtra(Constants.QUERY))
         {
             query = (Query) intent.getSerializableExtra(Constants.QUERY);
-            setTitle(query.getName());
+            name = query.getName();
         }
+        setTitle(name);
     }
 
     @Override
     protected void initMain()
     {
-        if (rows == null)
+        if (result == null)
         {
             showError();
             return;
         }
         if (switchEdit)
         {
-            setTitle(getTitle() + " (" + getResources().getString(R.string.readOnly) + ")");
+            setTitle(name + " (" + getResources().getString(R.string.readOnly) + ")");
         }
         if (!optionsInit)
         {
@@ -89,10 +89,10 @@ public class Result extends AsyncActivity implements Width.Listener
 
     private void initMainContent()
     {
-        List<String> headerCells = rows.remove(0);
+        List<String> headerCells = result.getColumns();
         width = new Width(headerCells.size());
 
-        ResultAdapter adapter = new ResultAdapter(this, rows, width);
+        ResultAdapter adapter = new ResultAdapter(this, result.getRows(), width);
         list = Utils.findView(this, R.id.table);
         list.setAdapter(adapter);
         list.setOnItemClickListener(this);
@@ -104,9 +104,9 @@ public class Result extends AsyncActivity implements Width.Listener
         header.setWidth(width);
         header.update();
         
-        for (int i = 0; i <= 100 && i < rows.size(); i++)
+        for (int i = 0; i <= 100 && i < result.getRows().size(); i++)
         {
-            header.updateWidth(rows.get(i));
+            header.updateWidth(result.getRows().get(i));
         }
         
         update();
@@ -127,7 +127,14 @@ public class Result extends AsyncActivity implements Width.Listener
         try
         {
             DB db = new DB(this, appDb, params);
-            rows = db.select(query.getQuery(), true, true, query.getBindArray());
+            if (query == null)
+            {
+                result = db.selectTable(name, true, edit, true);
+            }
+            else
+            {
+                result = db.select(query.getQuery(), true, true, query.getBindArray());
+            }
             if (edit && db.isReadOnly())
             {
                 edit = false;
@@ -257,18 +264,19 @@ public class Result extends AsyncActivity implements Width.Listener
     private void editRow(int position, boolean readOnly)
     {
         final List<String> names = header.getEditCells();
-        final List<String> oldValues = Row.getEditCells(rows.get(position));
+        final List<String> oldValues = Row.getEditCells(result.getRows().get(position));
         new FieldsDialog(
             this,
             getRowName(position),
             names,
+            result.getTypes(),
             oldValues,
             readOnly)
         {
             @Override
             protected void ready(List<String> newValues)
             {
-                Query query = new QueryGenerator().generateUpdate(getTitle().toString(), names, oldValues, newValues);
+                Query query = new QueryGenerator().generateUpdate(name, names, oldValues, newValues);
                 executeQuery(query);
             }
         };
@@ -282,8 +290,8 @@ public class Result extends AsyncActivity implements Width.Listener
             public void onClick(DialogInterface dialog, int which)
             {
                 List<String> names = header.getEditCells();
-                List<String> values = Row.getEditCells(rows.get(position));
-                Query query = new QueryGenerator().generateDelete(getTitle().toString(), names, values);
+                List<String> values = Row.getEditCells(result.getRows().get(position));
+                Query query = new QueryGenerator().generateDelete(name, names, values);
                 executeQuery(query);
             }
         };
@@ -296,13 +304,14 @@ public class Result extends AsyncActivity implements Width.Listener
             this,
             getResources().getString(R.string.addRow),
             names,
+            result.getTypes(),
             null,
             false)
         {
             @Override
             protected void ready(List<String> values)
             {
-                Query query = new QueryGenerator().generateInsert(getTitle().toString(), names, values);
+                Query query = new QueryGenerator().generateInsert(name, names, values);
                 executeQuery(query);
             }
         };
@@ -332,7 +341,7 @@ public class Result extends AsyncActivity implements Width.Listener
         new ImportJSON(
             this,
             new DB(this, appDb, params),
-            getTitle().toString(),
+            name,
             header.getEditCells())
         {
             @Override
@@ -347,8 +356,8 @@ public class Result extends AsyncActivity implements Width.Listener
     {
         new ExportJSON(
             this,
-            getTitle().toString(),
+            name,
             header.getCells(),
-            rows).executeDialog();
+            result.getRows()).executeDialog();
     }
 }

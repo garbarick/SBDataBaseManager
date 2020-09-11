@@ -85,6 +85,8 @@ public class App implements Comparable, Serializable
     
     protected boolean checkDBName(String name)
     {
-        return !name.endsWith("-journal");
+        return !name.endsWith("-journal") &&
+            !name.endsWith("-shm") &&
+            !name.endsWith("-wal");
     }
 }

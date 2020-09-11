@@ -30,12 +30,12 @@ public class Provider implements RemoteViewsFactory
         {
             Helper helper = new Helper(context);
             AppDbQuery query = helper.getQuery(id);
-            List<List<String>> table = 
+            DBResult table = 
                 new DB(context, query.getAppDb(), helper.getParams(query.getAppDb()))
                     .select(query.getQuery().getQuery(), true, false);
 
-            List<String> keys = table.get(0);
-            List<String> values = table.size() > 1 ? table.get(1) : null;
+            List<String> keys = table.getColumns();
+            List<String> values = table.getRows().isEmpty() ? null : table.getRows().get(0);
 
             int i = 0;
             for (String key : keys)

@@ -50,4 +50,7 @@
     <string name="json">JSON</string>
     <string name="mappingColumns">Mapping Columns</string>
 
+    <string name="toAppList">Go To Applications</string>
+    <string name="toDbList">Go To Databases</string>
+
 </resources>

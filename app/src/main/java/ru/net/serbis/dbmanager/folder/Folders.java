@@ -10,6 +10,7 @@ import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.param.*;
 import ru.net.serbis.dbmanager.query.*;
 import ru.net.serbis.dbmanager.task.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public class Folders extends AsyncActivity
 {
@@ -48,9 +49,31 @@ public class Folders extends AsyncActivity
         addFolder(R.string.queries, Queries.class);
         addFolder(R.string.params, Params.class);
     }
-    
+
     private void addFolder(int id, Class<? extends Folder> clazz)
     {
         folders.put(getResources().getString(id), clazz);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.to_app_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.toAppList:
+                Utils.toAppList(this);
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

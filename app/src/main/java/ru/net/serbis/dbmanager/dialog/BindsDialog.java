@@ -10,7 +10,7 @@ public abstract class BindsDialog extends FieldsDialog
 
     public BindsDialog(Context context, String name, List<String> names, boolean closeParent)
     {
-        super(context, name, names, null, false);
+        super(context, name, names, null, null, false);
         this.closeParent = closeParent;
     }
    

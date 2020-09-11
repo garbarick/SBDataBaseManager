@@ -6,9 +6,9 @@ import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.adapter.*;
+import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.folder.*;
 import ru.net.serbis.dbmanager.result.*;
-import ru.net.serbis.dbmanager.dialog.*;
 
 public class Tables extends Folder
 {
@@ -50,7 +50,7 @@ public class Tables extends Folder
                 " where type = 'table'" +
                 " order by name",
                 false,
-                false))
+                false).getRows())
             {
                 tables.add(row.get(0));
                 sqls.add(row.get(1));

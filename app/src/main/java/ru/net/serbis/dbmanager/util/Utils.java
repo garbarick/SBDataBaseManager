@@ -33,7 +33,7 @@ public class Utils
         String db = intent.getStringExtra(Constants.DB);
         return new AppDb(app, db);
     }
-    
+
     public static void closeActivity(Context context, boolean close)
     {
         if (close && context instanceof Activity)
@@ -41,7 +41,7 @@ public class Utils
             ((Activity) context).finish();
         }
     }
-    
+
     public static boolean isEmpty(String str)
     {
         return str == null || str.length() == 0;
@@ -65,12 +65,43 @@ public class Utils
         {
         }
     }
-    
+
     public static File getToolFolder()
     {
         File dir = Environment.getExternalStorageDirectory();
         File appDir = new File(dir, "SBDataBaseManager");
         appDir.mkdirs();
         return appDir;
+    }
+
+    public static <T> T getService(Context context, String name)
+    {
+        return (T) context.getSystemService(name);
+    }
+
+    public static void toAppList(Activity context)
+    {
+        Intent intent = new Intent(context, Main.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        context.startActivity(intent);
+    }
+
+    public static void toDbList(Activity context, App app)
+    {
+        Intent intent = new Intent(context, DataBases.class);
+        intent.putExtra(Constants.APP, app);
+        context.startActivity(intent);
+    }
+    
+    public static int toInt(String str)
+    {
+        try
+        {
+            return Integer.valueOf(str);
+        }
+        catch(Exception e)
+        {
+            return 0;
+        }
     }
 }

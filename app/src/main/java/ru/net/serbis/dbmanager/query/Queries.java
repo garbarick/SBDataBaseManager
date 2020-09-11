@@ -8,7 +8,6 @@ import ru.net.serbis.dbmanager.*;
 import ru.net.serbis.dbmanager.db.*;
 import ru.net.serbis.dbmanager.dialog.*;
 import ru.net.serbis.dbmanager.folder.*;
-import ru.net.serbis.dbmanager.result.*;
 
 public class Queries extends Folder
 {
@@ -56,6 +55,7 @@ public class Queries extends Folder
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
+        super.onCreateOptionsMenu(menu);
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.queries, menu);
         return true;
@@ -80,17 +80,20 @@ public class Queries extends Folder
         switch (item.getItemId())
         {
             case R.id.newQuery:
-                {
-                    Intent intent = new Intent(Queries.this, Edit.class);
-                    intent.putExtra(Constants.APP, appDb.getApp());
-                    intent.putExtra(Constants.DB, appDb.getDb());
-                    startActivityForResult(intent, Constants.NEW_REQUEST);
-                }
+                newQuery();
                 return true;
 
             default:
                 return super.onOptionsItemSelected(item);
         }
+    }
+
+    private void newQuery()
+    {
+        Intent intent = new Intent(this, Edit.class);
+        intent.putExtra(Constants.APP, appDb.getApp());
+        intent.putExtra(Constants.DB, appDb.getDb());
+        startActivityForResult(intent, Constants.NEW_REQUEST);
     }
 
     @Override

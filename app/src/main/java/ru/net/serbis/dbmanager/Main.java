@@ -1,13 +1,12 @@
 package ru.net.serbis.dbmanager;
 
-import android.content.*;
 import android.content.pm.*;
 import android.view.*;
 import android.widget.*;
 import java.util.*;
 import ru.net.serbis.dbmanager.app.*;
-import ru.net.serbis.dbmanager.app.db.*;
 import ru.net.serbis.dbmanager.task.*;
+import ru.net.serbis.dbmanager.util.*;
 
 public class Main extends AsyncActivity
 {
@@ -31,9 +30,7 @@ public class Main extends AsyncActivity
     @Override
     public void onItemClick(AdapterView parent, View view, int position, long id)
     {
-        Intent intent = new Intent(Main.this, DataBases.class);
-        intent.putExtra(Constants.APP, (App) parent.getItemAtPosition(position));
-        startActivity(intent);
+        Utils.toDbList(this, (App) parent.getItemAtPosition(position));
     }
 
     @Override

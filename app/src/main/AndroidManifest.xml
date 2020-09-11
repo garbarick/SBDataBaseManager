@@ -12,92 +12,92 @@
         
         <activity
             android:name=".Main"
-            android:label="@string/app_name">
-            
+            android:label="@string/app_name"
+            android:resizeableActivity="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            
         </activity>
         
         <activity
             android:name=".app.db.DataBases"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            android:resizeableActivity="true"/>
         
         <activity
             android:name=".folder.Folders"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            android:resizeableActivity="true"/>
         
         <activity
             android:name=".app.db.Tables"
             android:launchMode="singleTask"
-            android:configChanges="orientation"/>
+            android:configChanges="orientation"
+            android:resizeableActivity="true"/>
         
         <activity
             android:name=".query.Queries"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            android:resizeableActivity="true"/>
         
         <activity
             android:name=".query.Edit"
-            android:configChanges="orientation"/>
+            android:configChanges="orientation"
+            android:resizeableActivity="true"/>
         
         <activity
             android:name=".result.Result"
             android:launchMode="singleTask"
-            android:configChanges="orientation"/>
+            android:configChanges="orientation"
+            android:resizeableActivity="true"/>
 
         <activity
             android:name=".param.Params"
             android:launchMode="singleTask"
-            android:configChanges="orientation"/>
+            android:configChanges="orientation"
+            android:resizeableActivity="true"/>
 
         <activity
-            android:name=".widget.Config">
-
+            android:name=".widget.Config"
+            android:resizeableActivity="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
-
         </activity>
         
         <activity
             android:name=".widget.QueryStartActivity"
             android:theme="@android:style/Theme.Holo.Wallpaper.NoTitleBar"
             android:launchMode="singleTask"
-            android:stateNotNeeded="true"/>
+            android:stateNotNeeded="true"
+            android:resizeableActivity="true"/>
         
         <receiver
             android:name=".widget.Widget"
             android:icon="@drawable/table"
             android:label="@string/widget_query_result">
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget"/>
-
         </receiver>
         
         <receiver
             android:name=".widget.QueryStart"
             android:icon="@drawable/sql"
             android:label="@string/widget_query_start">
-
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
             </intent-filter>
-
             <meta-data
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widget_query_start"/>
-
         </receiver>
         
         <service

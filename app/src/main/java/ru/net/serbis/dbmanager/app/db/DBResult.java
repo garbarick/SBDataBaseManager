@@ -9,12 +9,18 @@ import ru.net.serbis.dbmanager.param.*;
 public class DBResult
 {
     private List<String> columns;
+    private List<String> pkColumns;
     private Map<String, String> types;
     private List<List<String>> rows = new ArrayList<List<String>>();
 
     public List<String> getColumns()
     {
         return columns;
+    }
+
+    public List<String> getPkColumns()
+    {
+        return pkColumns;
     }
 
     public Map<String, String> getTypes()
@@ -45,13 +51,22 @@ public class DBResult
     public void initTypes(Cursor cursor)
     {
         types = new HashMap<String, String>(columns.size());
+        pkColumns = new ArrayList<String>(columns.size());
         if (cursor.moveToFirst())
         {
             do
             {
-                int name = cursor.getColumnIndex("name");
-                int type = cursor.getColumnIndex("type");
-                types.put(cursor.getString(name), cursor.getString(type));
+                int nameIndex = cursor.getColumnIndex("name");
+                int typeIndex = cursor.getColumnIndex("type");
+                int pkIndex = cursor.getColumnIndex("pk");
+                String name = cursor.getString(nameIndex);
+                String type = cursor.getString(typeIndex);
+                int pk = cursor.getInt(pkIndex);
+                types.put(name, type);
+                if (pk == 1)
+                {
+                    pkColumns.add(name);
+                }
             }
             while(cursor.moveToNext());
         }

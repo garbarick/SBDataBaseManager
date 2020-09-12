@@ -276,7 +276,7 @@ public class Result extends AsyncActivity implements Width.Listener
             @Override
             protected void ready(List<String> newValues)
             {
-                Query query = new QueryGenerator().generateUpdate(name, names, oldValues, newValues);
+                Query query = new QueryGenerator().generateUpdate(name, names, result.getPkColumns(), oldValues, newValues);
                 executeQuery(query);
             }
         };
@@ -291,7 +291,7 @@ public class Result extends AsyncActivity implements Width.Listener
             {
                 List<String> names = header.getEditCells();
                 List<String> values = Row.getEditCells(result.getRows().get(position));
-                Query query = new QueryGenerator().generateDelete(name, names, values);
+                Query query = new QueryGenerator().generateDelete(name, names, result.getPkColumns(), values);
                 executeQuery(query);
             }
         };

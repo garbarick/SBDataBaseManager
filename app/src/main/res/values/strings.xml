@@ -27,7 +27,7 @@
     <string name="charset">Charset</string>
     <string name="defaultValue">Default</string>
 
-    <string name="queryInfo">Bind parameter: #bind_name#</string>
+    <string name="queryInfo">Bind parameter: #bind_name#, #bind_name:BOOLEAN, #bind_name:TIMESTAMP</string>
     <string name="row">Row</string>
 
     <string name="view">View</string>

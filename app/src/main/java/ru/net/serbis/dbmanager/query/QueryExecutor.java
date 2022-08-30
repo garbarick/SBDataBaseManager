@@ -36,9 +36,10 @@ public class QueryExecutor
         final StringBuffer result = new StringBuffer();
         final Matcher matcher = BINDS.matcher(baseQuery.getQuery());
         List<String> names = new ArrayList<String>();
+        Map<String, String> types = new HashMap<String, String>();
         while (matcher.find())
         {
-            names.add(matcher.group(1));
+            initNameType(matcher, types, names);
             matcher.appendReplacement(result, "?");
         }
         if (names.isEmpty())
@@ -46,7 +47,7 @@ public class QueryExecutor
             readyQuery(baseQuery);
             return;
         }
-        new BindsDialog(context, baseQuery.getName(), names, closeParent)
+        new BindsDialog(context, baseQuery.getName(), names, types, closeParent)
         {
             @Override
             protected void ready(List<String> values)
@@ -62,7 +63,20 @@ public class QueryExecutor
             }
         };
     }
-    
+
+    private void initNameType(Matcher matcher, Map<String, String> types, List<String> names)
+    {
+        String name = matcher.group(1);
+        if (name.contains(":"))
+        {
+            String[] data = name.split(":");
+            name = data[0];
+            String type = data[1];
+            types.put(name, type);
+        }
+        names.add(name);
+    }
+
     private void readyQuery(Query query)
     {
         Intent intent = new Intent(context, Result.class);

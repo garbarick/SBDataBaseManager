@@ -17,6 +17,10 @@ public class QueryStart extends WidgetBase
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
 
         RemoteViews views = getRemoteView(context, manager, id);
+        if (views == null)
+        {
+            return;
+        }
         
         AppDbQuery query = getQuery(context, id);
         if (query == null)

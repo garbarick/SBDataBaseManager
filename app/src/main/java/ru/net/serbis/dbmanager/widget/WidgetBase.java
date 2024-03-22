@@ -39,7 +39,12 @@ public abstract class WidgetBase extends AppWidgetProvider
     
     protected RemoteViews getRemoteView(Context context, AppWidgetManager manager, int id)
     {
-        int layoutId = manager.getAppWidgetInfo(id).initialLayout;
+        AppWidgetProviderInfo info = manager.getAppWidgetInfo(id);
+        if (info == null)
+        {
+            return null;
+        }
+        int layoutId = info.initialLayout;
         return new RemoteViews(context.getPackageName(), layoutId);
     }
     

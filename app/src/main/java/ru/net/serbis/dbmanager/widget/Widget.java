@@ -15,6 +15,10 @@ public class Widget extends WidgetBase
         AppWidgetManager manager = AppWidgetManager.getInstance(context);
 
         RemoteViews views = getRemoteView(context, manager, id);
+        if (views == null)
+        {
+            return;
+        }
 
         views.setRemoteAdapter(id, R.id.table, getActionIntent(context, Service.class, UPDATE, id));
         views.setOnClickPendingIntent(R.id.update, getPendingIntent(context, UPDATE, id));
